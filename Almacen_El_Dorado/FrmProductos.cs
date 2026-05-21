@@ -522,5 +522,12 @@ namespace Almacen_El_Dorado
         private void txtStock_TextChanged(object sender, EventArgs e) { }
         private void dgvProductos_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void label1_Click(object sender, EventArgs e) { }
+
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            FrmPrincipal principal = new FrmPrincipal();
+            principal.Show();
+        }
     }
 }

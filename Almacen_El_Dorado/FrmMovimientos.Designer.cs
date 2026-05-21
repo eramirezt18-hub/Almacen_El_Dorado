@@ -29,18 +29,19 @@
         private void InitializeComponent()
         {
             this.gbTipoMovimiento = new System.Windows.Forms.GroupBox();
-            this.rbEntrada = new System.Windows.Forms.RadioButton();
             this.rbSalida = new System.Windows.Forms.RadioButton();
+            this.rbEntrada = new System.Windows.Forms.RadioButton();
             this.gbDatosMovimiento = new System.Windows.Forms.GroupBox();
-            this.lblProducto = new System.Windows.Forms.Label();
-            this.cmbProducto = new System.Windows.Forms.ComboBox();
-            this.lblCantidad = new System.Windows.Forms.Label();
-            this.nudCantidad = new System.Windows.Forms.NumericUpDown();
-            this.lblStockActual = new System.Windows.Forms.Label();
-            this.btnRegistrar = new System.Windows.Forms.Button();
             this.btnLimpiarMov = new System.Windows.Forms.Button();
+            this.btnRegistrar = new System.Windows.Forms.Button();
+            this.lblStockActual = new System.Windows.Forms.Label();
+            this.nudCantidad = new System.Windows.Forms.NumericUpDown();
+            this.lblCantidad = new System.Windows.Forms.Label();
+            this.cmbProducto = new System.Windows.Forms.ComboBox();
+            this.lblProducto = new System.Windows.Forms.Label();
             this.gbHistorial = new System.Windows.Forms.GroupBox();
             this.dgvMovimientos = new System.Windows.Forms.DataGridView();
+            this.btnVolver = new System.Windows.Forms.Button();
             this.gbTipoMovimiento.SuspendLayout();
             this.gbDatosMovimiento.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCantidad)).BeginInit();
@@ -60,18 +61,6 @@
             this.gbTipoMovimiento.Text = "Tipo de MOvimiento";
             this.gbTipoMovimiento.Enter += new System.EventHandler(this.gbTipoMovimiento_Enter);
             // 
-            // rbEntrada
-            // 
-            this.rbEntrada.AutoSize = true;
-            this.rbEntrada.Location = new System.Drawing.Point(21, 44);
-            this.rbEntrada.Name = "rbEntrada";
-            this.rbEntrada.Size = new System.Drawing.Size(75, 20);
-            this.rbEntrada.TabIndex = 0;
-            this.rbEntrada.TabStop = true;
-            this.rbEntrada.Text = "Entrada";
-            this.rbEntrada.UseVisualStyleBackColor = true;
-            this.rbEntrada.CheckedChanged += new System.EventHandler(this.rbEntrada_CheckedChanged);
-            // 
             // rbSalida
             // 
             this.rbSalida.AutoSize = true;
@@ -84,6 +73,18 @@
             this.rbSalida.UseVisualStyleBackColor = true;
             this.rbSalida.CheckedChanged += new System.EventHandler(this.rbSalida_CheckedChanged);
             // 
+            // rbEntrada
+            // 
+            this.rbEntrada.AutoSize = true;
+            this.rbEntrada.Location = new System.Drawing.Point(21, 44);
+            this.rbEntrada.Name = "rbEntrada";
+            this.rbEntrada.Size = new System.Drawing.Size(75, 20);
+            this.rbEntrada.TabIndex = 0;
+            this.rbEntrada.TabStop = true;
+            this.rbEntrada.Text = "Entrada";
+            this.rbEntrada.UseVisualStyleBackColor = true;
+            this.rbEntrada.CheckedChanged += new System.EventHandler(this.rbEntrada_CheckedChanged);
+            // 
             // gbDatosMovimiento
             // 
             this.gbDatosMovimiento.Controls.Add(this.btnLimpiarMov);
@@ -95,38 +96,41 @@
             this.gbDatosMovimiento.Controls.Add(this.lblProducto);
             this.gbDatosMovimiento.Location = new System.Drawing.Point(350, 12);
             this.gbDatosMovimiento.Name = "gbDatosMovimiento";
-            this.gbDatosMovimiento.Size = new System.Drawing.Size(398, 199);
+            this.gbDatosMovimiento.Size = new System.Drawing.Size(316, 199);
             this.gbDatosMovimiento.TabIndex = 1;
             this.gbDatosMovimiento.TabStop = false;
             this.gbDatosMovimiento.Text = "Datos del Movimiento";
             this.gbDatosMovimiento.Enter += new System.EventHandler(this.gbDatosMovimiento_Enter);
             // 
-            // lblProducto
+            // btnLimpiarMov
             // 
-            this.lblProducto.AutoSize = true;
-            this.lblProducto.Location = new System.Drawing.Point(6, 33);
-            this.lblProducto.Name = "lblProducto";
-            this.lblProducto.Size = new System.Drawing.Size(64, 16);
-            this.lblProducto.TabIndex = 0;
-            this.lblProducto.Text = "Producto:";
+            this.btnLimpiarMov.Location = new System.Drawing.Point(90, 165);
+            this.btnLimpiarMov.Name = "btnLimpiarMov";
+            this.btnLimpiarMov.Size = new System.Drawing.Size(108, 26);
+            this.btnLimpiarMov.TabIndex = 6;
+            this.btnLimpiarMov.Text = "Limpiar";
+            this.btnLimpiarMov.UseVisualStyleBackColor = true;
+            this.btnLimpiarMov.Click += new System.EventHandler(this.btnLimpiarMov_Click);
             // 
-            // cmbProducto
+            // btnRegistrar
             // 
-            this.cmbProducto.FormattingEnabled = true;
-            this.cmbProducto.Location = new System.Drawing.Point(108, 30);
-            this.cmbProducto.Name = "cmbProducto";
-            this.cmbProducto.Size = new System.Drawing.Size(121, 24);
-            this.cmbProducto.TabIndex = 1;
-            this.cmbProducto.SelectedIndexChanged += new System.EventHandler(this.cmbProducto_SelectedIndexChanged);
+            this.btnRegistrar.Location = new System.Drawing.Point(72, 130);
+            this.btnRegistrar.Name = "btnRegistrar";
+            this.btnRegistrar.Size = new System.Drawing.Size(157, 29);
+            this.btnRegistrar.TabIndex = 5;
+            this.btnRegistrar.Text = "Registrar Movimiento";
+            this.btnRegistrar.UseVisualStyleBackColor = true;
+            this.btnRegistrar.Click += new System.EventHandler(this.btnRegistrar_Click);
             // 
-            // lblCantidad
+            // lblStockActual
             // 
-            this.lblCantidad.AutoSize = true;
-            this.lblCantidad.Location = new System.Drawing.Point(6, 66);
-            this.lblCantidad.Name = "lblCantidad";
-            this.lblCantidad.Size = new System.Drawing.Size(64, 16);
-            this.lblCantidad.TabIndex = 2;
-            this.lblCantidad.Text = "Cantidad:";
+            this.lblStockActual.AutoSize = true;
+            this.lblStockActual.Location = new System.Drawing.Point(6, 98);
+            this.lblStockActual.Name = "lblStockActual";
+            this.lblStockActual.Size = new System.Drawing.Size(92, 16);
+            this.lblStockActual.TabIndex = 4;
+            this.lblStockActual.Text = "Stock Actual:--";
+            this.lblStockActual.Click += new System.EventHandler(this.lblStockActual_Click);
             // 
             // nudCantidad
             // 
@@ -151,35 +155,32 @@
             0});
             this.nudCantidad.ValueChanged += new System.EventHandler(this.nudCantidad_ValueChanged);
             // 
-            // lblStockActual
+            // lblCantidad
             // 
-            this.lblStockActual.AutoSize = true;
-            this.lblStockActual.Location = new System.Drawing.Point(6, 98);
-            this.lblStockActual.Name = "lblStockActual";
-            this.lblStockActual.Size = new System.Drawing.Size(92, 16);
-            this.lblStockActual.TabIndex = 4;
-            this.lblStockActual.Text = "Stock Actual:--";
-            this.lblStockActual.Click += new System.EventHandler(this.lblStockActual_Click);
+            this.lblCantidad.AutoSize = true;
+            this.lblCantidad.Location = new System.Drawing.Point(6, 66);
+            this.lblCantidad.Name = "lblCantidad";
+            this.lblCantidad.Size = new System.Drawing.Size(64, 16);
+            this.lblCantidad.TabIndex = 2;
+            this.lblCantidad.Text = "Cantidad:";
             // 
-            // btnRegistrar
+            // cmbProducto
             // 
-            this.btnRegistrar.Location = new System.Drawing.Point(72, 130);
-            this.btnRegistrar.Name = "btnRegistrar";
-            this.btnRegistrar.Size = new System.Drawing.Size(157, 29);
-            this.btnRegistrar.TabIndex = 5;
-            this.btnRegistrar.Text = "Registrar Movimiento";
-            this.btnRegistrar.UseVisualStyleBackColor = true;
-            this.btnRegistrar.Click += new System.EventHandler(this.btnRegistrar_Click);
+            this.cmbProducto.FormattingEnabled = true;
+            this.cmbProducto.Location = new System.Drawing.Point(108, 30);
+            this.cmbProducto.Name = "cmbProducto";
+            this.cmbProducto.Size = new System.Drawing.Size(121, 24);
+            this.cmbProducto.TabIndex = 1;
+            this.cmbProducto.SelectedIndexChanged += new System.EventHandler(this.cmbProducto_SelectedIndexChanged);
             // 
-            // btnLimpiarMov
+            // lblProducto
             // 
-            this.btnLimpiarMov.Location = new System.Drawing.Point(90, 165);
-            this.btnLimpiarMov.Name = "btnLimpiarMov";
-            this.btnLimpiarMov.Size = new System.Drawing.Size(108, 26);
-            this.btnLimpiarMov.TabIndex = 6;
-            this.btnLimpiarMov.Text = "Limpiar";
-            this.btnLimpiarMov.UseVisualStyleBackColor = true;
-            this.btnLimpiarMov.Click += new System.EventHandler(this.btnLimpiarMov_Click);
+            this.lblProducto.AutoSize = true;
+            this.lblProducto.Location = new System.Drawing.Point(6, 33);
+            this.lblProducto.Name = "lblProducto";
+            this.lblProducto.Size = new System.Drawing.Size(64, 16);
+            this.lblProducto.TabIndex = 0;
+            this.lblProducto.Text = "Producto:";
             // 
             // gbHistorial
             // 
@@ -203,11 +204,22 @@
             this.dgvMovimientos.TabIndex = 0;
             this.dgvMovimientos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMovimientos_CellContentClick);
             // 
+            // btnVolver
+            // 
+            this.btnVolver.Location = new System.Drawing.Point(687, 12);
+            this.btnVolver.Name = "btnVolver";
+            this.btnVolver.Size = new System.Drawing.Size(63, 26);
+            this.btnVolver.TabIndex = 7;
+            this.btnVolver.Text = "Volver";
+            this.btnVolver.UseVisualStyleBackColor = true;
+            this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
+            // 
             // FrmMovimientos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.gbHistorial);
             this.Controls.Add(this.gbDatosMovimiento);
             this.Controls.Add(this.gbTipoMovimiento);
@@ -239,5 +251,6 @@
         private System.Windows.Forms.Button btnRegistrar;
         private System.Windows.Forms.GroupBox gbHistorial;
         private System.Windows.Forms.DataGridView dgvMovimientos;
+        private System.Windows.Forms.Button btnVolver;
     }
 }

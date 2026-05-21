@@ -347,5 +347,12 @@ namespace Almacen_El_Dorado
         private void txtContacto_TextChanged(object sender, EventArgs e) { }
         private void txtEmail_TextChanged(object sender, EventArgs e) { }
         private void gbDatosProveedor_Enter(object sender, EventArgs e) { }
+
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            FrmPrincipal principal = new FrmPrincipal();
+            principal.Show();
+        }
     }
 }

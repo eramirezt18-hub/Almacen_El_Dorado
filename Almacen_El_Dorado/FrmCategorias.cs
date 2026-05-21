@@ -142,5 +142,12 @@ namespace Almacen_El_Dorado
         {
             // No necesita codigo
         }
+
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            FrmPrincipal principal = new FrmPrincipal();
+            principal.Show();
+        }
     }
 }

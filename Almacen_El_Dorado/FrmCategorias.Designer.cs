@@ -34,6 +34,7 @@
             this.btnEliminar = new System.Windows.Forms.Button();
             this.lstCategorias = new System.Windows.Forms.ListBox();
             this.lblIntruccion = new System.Windows.Forms.Label();
+            this.btnVolver = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblCategoria
@@ -92,11 +93,22 @@
             this.lblIntruccion.TabIndex = 5;
             this.lblIntruccion.Text = "Seleccione una categoria a Eliminar";
             // 
+            // btnVolver
+            // 
+            this.btnVolver.Location = new System.Drawing.Point(662, 27);
+            this.btnVolver.Name = "btnVolver";
+            this.btnVolver.Size = new System.Drawing.Size(75, 23);
+            this.btnVolver.TabIndex = 6;
+            this.btnVolver.Text = "Volver";
+            this.btnVolver.UseVisualStyleBackColor = true;
+            this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
+            // 
             // FrmCategorias
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.lblIntruccion);
             this.Controls.Add(this.lstCategorias);
             this.Controls.Add(this.btnEliminar);
@@ -118,5 +130,6 @@
         private System.Windows.Forms.Button btnEliminar;
         private System.Windows.Forms.ListBox lstCategorias;
         private System.Windows.Forms.Label lblIntruccion;
+        private System.Windows.Forms.Button btnVolver;
     }
 }

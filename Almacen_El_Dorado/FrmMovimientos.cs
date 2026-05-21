@@ -408,5 +408,12 @@ namespace Almacen_El_Dorado
         private void nudCantidad_ValueChanged(object sender, EventArgs e) { }
         private void gbTipoMovimiento_Enter(object sender, EventArgs e) { }
         private void gbHistorial_Enter(object sender, EventArgs e) { }
+
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            FrmPrincipal principal = new FrmPrincipal();
+            principal.Show();
+        }
     }
 }

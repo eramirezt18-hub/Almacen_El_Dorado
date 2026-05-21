@@ -88,16 +88,13 @@
     <Compile Include="FrmProveedores.Designer.cs">
       <DependentUpon>FrmProveedores.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmReportes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmReportes.Designer.cs">
-      <DependentUpon>FrmReportes.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmCategorias.resx">
       <DependentUpon>FrmCategorias.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmConsultas.resx">
+      <DependentUpon>FrmConsultas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
