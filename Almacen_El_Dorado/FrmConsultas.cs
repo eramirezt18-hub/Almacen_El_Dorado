@@ -1,50 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using Almacen_El_Dorado.Database;
+using System.Data.SqlClient;
 
 namespace Almacen_El_Dorado
 {
     public partial class FrmConsultas : Form
     {
-        // Lista de productos
-        List<ProductoConsulta> listaProductos = new List<ProductoConsulta>();
-
-        // ========== CONSTRUCTOR ==========
         public FrmConsultas()
         {
             InitializeComponent();
-
-            // Configurar DataGridView
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new System.Drawing.Size(1100, 700);
             ConfigurarDataGridView();
-
-            // Cargar productos de ejemplo
-            CargarProductosEjemplo();
-
-            // Mostrar productos
-            MostrarProductos();
-
-            // Calcular y mostrar resumen
-            CalcularResumen();
-
-            // Seleccionar filtro por nombre por defecto
+            CargarProductos();
             rbNombre.Checked = true;
         }
 
-        // ========== CLASE PRODUCTO ==========
-        class ProductoConsulta
-        {
-            public string Codigo { get; set; }
-            public string Nombre { get; set; }
-            public string Categoria { get; set; }
-            public int Stock { get; set; }
-            public decimal Precio { get; set; }
-        }
-
-        // ========== CONFIGURAR DATAGRIDVIEW ==========
+        // configurar data grid view
         private void ConfigurarDataGridView()
         {
             dgvConsultas.Columns.Clear();
-
             dgvConsultas.Columns.Add("Codigo", "Codigo");
             dgvConsultas.Columns.Add("Nombre", "Nombre");
             dgvConsultas.Columns.Add("Categoria", "Categoria");
@@ -63,223 +39,134 @@ namespace Almacen_El_Dorado
             dgvConsultas.AllowUserToAddRows = false;
         }
 
-        // ========== CARGAR PRODUCTOS DE EJEMPLO ==========
-        private void CargarProductosEjemplo()
+        // cargar productos desde la base de datos
+        private void CargarProductos(string filtro = "", string tipoFiltro = "nombre")
         {
-            listaProductos.Clear();
-
-            listaProductos.Add(new ProductoConsulta
+            try
             {
-                Codigo = "PROD001",
-                Nombre = "Laptop HP",
-                Categoria = "Electronica",
-                Stock = 10,
-                Precio = 5000.00m
-            });
-
-            listaProductos.Add(new ProductoConsulta
-            {
-                Codigo = "PROD002",
-                Nombre = "Mouse USB",
-                Categoria = "Electronica",
-                Stock = 50,
-                Precio = 150.00m
-            });
-
-            listaProductos.Add(new ProductoConsulta
-            {
-                Codigo = "PROD003",
-                Nombre = "Camisa Polo",
-                Categoria = "Ropa",
-                Stock = 30,
-                Precio = 250.00m
-            });
-
-            listaProductos.Add(new ProductoConsulta
-            {
-                Codigo = "PROD004",
-                Nombre = "Teclado USB",
-                Categoria = "Electronica",
-                Stock = 8,
-                Precio = 300.00m
-            });
-
-            listaProductos.Add(new ProductoConsulta
-            {
-                Codigo = "PROD005",
-                Nombre = "Silla Gamer",
-                Categoria = "Hogar",
-                Stock = 3,
-                Precio = 1200.00m
-            });
-
-            listaProductos.Add(new ProductoConsulta
-            {
-                Codigo = "PROD006",
-                Nombre = "Monitor LED",
-                Categoria = "Electronica",
-                Stock = 2,
-                Precio = 1800.00m
-            });
-        }
-
-        // ========== MOSTRAR TODOS LOS PRODUCTOS ==========
-        private void MostrarProductos()
-        {
-            dgvConsultas.Rows.Clear();
-
-            int fila = 0;
-            foreach (ProductoConsulta p in listaProductos)
-            {
-                dgvConsultas.Rows.Add();
-                dgvConsultas.Rows[fila].Cells[0].Value = p.Codigo;
-                dgvConsultas.Rows[fila].Cells[1].Value = p.Nombre;
-                dgvConsultas.Rows[fila].Cells[2].Value = p.Categoria;
-                dgvConsultas.Rows[fila].Cells[3].Value = p.Stock;
-                dgvConsultas.Rows[fila].Cells[4].Value = p.Precio.ToString("0.00");
-                dgvConsultas.Rows[fila].Cells[5].Value = (p.Stock * p.Precio).ToString("0.00");
-
-                // Color rojo para stock bajo (menos de 5)
-                if (p.Stock <= 5)
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
-                    dgvConsultas.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
-                }
-                // Color amarillo para stock medio (entre 5 y 10)
-                else if (p.Stock <= 10)
-                {
-                    dgvConsultas.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightYellow;
-                }
+                    conn.Open();
+                    string query;
 
-                fila++;
-            }
-        }
-
-        // ========== BUSCAR PRODUCTOS ==========
-        private void BuscarProductos()
-        {
-            string textoBuscar = txtBuscar.Text.Trim().ToLower();
-
-            if (textoBuscar == "")
-            {
-                MostrarProductos();
-                CalcularResumen();
-                return;
-            }
-
-            dgvConsultas.Rows.Clear();
-
-            int fila = 0;
-            int totalEncontrados = 0;
-            decimal valorTotalEncontrados = 0;
-            int stockBajoEncontrados = 0;
-
-            foreach (ProductoConsulta p in listaProductos)
-            {
-                bool coincide = false;
-
-                // Determinar por que campo filtrar
-                if (rbNombre.Checked)
-                {
-                    coincide = p.Nombre.ToLower().Contains(textoBuscar);
-                }
-                else if (rbCodigo.Checked)
-                {
-                    coincide = p.Codigo.ToLower().Contains(textoBuscar);
-                }
-                else if (rbCategoria.Checked)
-                {
-                    coincide = p.Categoria.ToLower().Contains(textoBuscar);
-                }
-
-                if (coincide)
-                {
-                    dgvConsultas.Rows.Add();
-                    dgvConsultas.Rows[fila].Cells[0].Value = p.Codigo;
-                    dgvConsultas.Rows[fila].Cells[1].Value = p.Nombre;
-                    dgvConsultas.Rows[fila].Cells[2].Value = p.Categoria;
-                    dgvConsultas.Rows[fila].Cells[3].Value = p.Stock;
-                    dgvConsultas.Rows[fila].Cells[4].Value = p.Precio.ToString("0.00");
-                    dgvConsultas.Rows[fila].Cells[5].Value = (p.Stock * p.Precio).ToString("0.00");
-
-                    if (p.Stock <= 5)
+                    if (filtro == "")
                     {
-                        dgvConsultas.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
-                        stockBajoEncontrados++;
+                        query = @"SELECT p.Codigo, p.Nombre, c.Nombre as Categoria, p.Stock, p.Precio 
+                                 FROM Productos p 
+                                 INNER JOIN Categorias c ON p.IdCategoria = c.IdCategoria 
+                                 ORDER BY p.Nombre";
                     }
-                    else if (p.Stock <= 10)
+                    else
                     {
-                        dgvConsultas.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightYellow;
+                        if (tipoFiltro == "nombre")
+                        {
+                            query = @"SELECT p.Codigo, p.Nombre, c.Nombre as Categoria, p.Stock, p.Precio 
+                                     FROM Productos p 
+                                     INNER JOIN Categorias c ON p.IdCategoria = c.IdCategoria 
+                                     WHERE p.Nombre LIKE @filtro 
+                                     ORDER BY p.Nombre";
+                        }
+                        else if (tipoFiltro == "codigo")
+                        {
+                            query = @"SELECT p.Codigo, p.Nombre, c.Nombre as Categoria, p.Stock, p.Precio 
+                                     FROM Productos p 
+                                     INNER JOIN Categorias c ON p.IdCategoria = c.IdCategoria 
+                                     WHERE p.Codigo LIKE @filtro 
+                                     ORDER BY p.Nombre";
+                        }
+                        else
+                        {
+                            query = @"SELECT p.Codigo, p.Nombre, c.Nombre as Categoria, p.Stock, p.Precio 
+                                     FROM Productos p 
+                                     INNER JOIN Categorias c ON p.IdCategoria = c.IdCategoria 
+                                     WHERE c.Nombre LIKE @filtro 
+                                     ORDER BY p.Nombre";
+                        }
                     }
 
-                    totalEncontrados++;
-                    valorTotalEncontrados += p.Stock * p.Precio;
-                    fila++;
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    if (filtro != "")
+                    {
+                        cmd.Parameters.AddWithValue("@filtro", "%" + filtro + "%");
+                    }
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    dgvConsultas.Rows.Clear();
+
+                    int totalProductos = 0;
+                    decimal valorTotal = 0;
+                    int stockBajo = 0;
+
+                    while (reader.Read())
+                    {
+                        string codigo = reader["Codigo"].ToString();
+                        string nombre = reader["Nombre"].ToString();
+                        string categoria = reader["Categoria"].ToString();
+                        int stock = Convert.ToInt32(reader["Stock"]);
+                        decimal precio = Convert.ToDecimal(reader["Precio"]);
+                        decimal valor = stock * precio;
+
+                        dgvConsultas.Rows.Add(codigo, nombre, categoria, stock, precio.ToString("0.00"), valor.ToString("0.00"));
+
+                        totalProductos++;
+                        valorTotal += valor;
+                        if (stock <= 5) stockBajo++;
+                    }
+                    reader.Close();
+
+                    // mostrar resumen
+                    lblTotalProductos.Text = "Total Productos: " + totalProductos;
+                    lblValorTotal.Text = "Valor Total: Q. " + valorTotal.ToString("0.00");
+                    lblStockBajo.Text = "Stock Bajo (<=5): " + stockBajo;
+
+                    // contar categorias
+                    string catQuery = "SELECT COUNT(DISTINCT IdCategoria) FROM Productos";
+                    SqlCommand catCmd = new SqlCommand(catQuery, conn);
+                    int totalCategorias = Convert.ToInt32(catCmd.ExecuteScalar());
+                    lblCategorias.Text = "Categorias: " + totalCategorias;
+
+                    if (filtro != "" && dgvConsultas.Rows.Count == 0)
+                    {
+                        MessageBox.Show("No se encontraron productos con: " + filtro, "Busqueda sin resultados",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CargarProductos();
+                        txtBuscar.Text = "";
+                    }
                 }
             }
-
-            // Actualizar resumen con los resultados de busqueda
-            lblTotalProductos.Text = "Total Productos: " + totalEncontrados;
-            lblValorTotal.Text = "Valor Total: Q. " + valorTotalEncontrados.ToString("0.00");
-            lblStockBajo.Text = "Stock Bajo (<=5): " + stockBajoEncontrados;
-
-            if (totalEncontrados == 0)
+            catch (Exception ex)
             {
-                MessageBox.Show("No se encontraron productos con: " + textoBuscar,
-                    "Busqueda sin resultados",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                MostrarProductos();
-                CalcularResumen();
-                txtBuscar.Text = "";
+                MessageBox.Show("Error al cargar productos: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ========== CALCULAR RESUMEN DEL INVENTARIO ==========
-        private void CalcularResumen()
-        {
-            int totalProductos = listaProductos.Count;
-            decimal valorTotal = 0;
-            int stockBajo = 0;
-            List<string> categoriasUnicas = new List<string>();
-
-            foreach (ProductoConsulta p in listaProductos)
-            {
-                valorTotal += p.Stock * p.Precio;
-
-                if (p.Stock <= 5)
-                {
-                    stockBajo++;
-                }
-
-                // Agregar categoria si no existe en la lista
-                if (!categoriasUnicas.Contains(p.Categoria))
-                {
-                    categoriasUnicas.Add(p.Categoria);
-                }
-            }
-
-            lblTotalProductos.Text = "Total Productos: " + totalProductos;
-            lblValorTotal.Text = "Valor Total: Q. " + valorTotal.ToString("0.00");
-            lblStockBajo.Text = "Stock Bajo (<=5): " + stockBajo;
-            lblCategorias.Text = "Categorias: " + categoriasUnicas.Count;
-        }
-
-        // ========== BOTON BUSCAR ==========
+        // boton buscar
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            BuscarProductos();
+            string textoBuscar = txtBuscar.Text.Trim();
+            if (textoBuscar == "")
+            {
+                CargarProductos();
+            }
+            else
+            {
+                string tipo = "nombre";
+                if (rbCodigo.Checked) tipo = "codigo";
+                else if (rbCategoria.Checked) tipo = "categoria";
+                CargarProductos(textoBuscar, tipo);
+            }
         }
 
-        // ========== BOTON LIMPIAR FILTROS ==========
+        // boton limpiar filtros
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtBuscar.Text = "";
             rbNombre.Checked = true;
-            MostrarProductos();
-            CalcularResumen();
+            CargarProductos();
         }
 
-        // ========== BUSCAR CON ENTER ==========
+        // buscar con enter
         private void txtBuscar_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -288,12 +175,12 @@ namespace Almacen_El_Dorado
             }
         }
 
-        // ========== EVENTOS DE RADIOBUTTON ==========
+        // eventos de radiobutton
         private void rbNombre_CheckedChanged(object sender, EventArgs e)
         {
             if (rbNombre.Checked && txtBuscar.Text != "")
             {
-                BuscarProductos();
+                CargarProductos(txtBuscar.Text, "nombre");
             }
         }
 
@@ -301,7 +188,7 @@ namespace Almacen_El_Dorado
         {
             if (rbCodigo.Checked && txtBuscar.Text != "")
             {
-                BuscarProductos();
+                CargarProductos(txtBuscar.Text, "codigo");
             }
         }
 
@@ -309,11 +196,19 @@ namespace Almacen_El_Dorado
         {
             if (rbCategoria.Checked && txtBuscar.Text != "")
             {
-                BuscarProductos();
+                CargarProductos(txtBuscar.Text, "categoria");
             }
         }
 
-        // ========== EVENTOS VACIOS (no necesitan codigo) ==========
+        // volver al menu principal
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            FrmPrincipal principal = new FrmPrincipal();
+            principal.Show();
+        }
+
+        // eventos vacios
         private void dgvConsultas_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void gbFiltros_Enter(object sender, EventArgs e) { }
         private void txtBuscar_TextChanged(object sender, EventArgs e) { }
@@ -322,12 +217,6 @@ namespace Almacen_El_Dorado
         private void lblValorTotal_Click(object sender, EventArgs e) { }
         private void lblStockBajo_Click(object sender, EventArgs e) { }
         private void lblCategorias_Click(object sender, EventArgs e) { }
-
-        private void btnVolver_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            FrmPrincipal principal = new FrmPrincipal();
-            principal.Show();
-        }
+        private void FrmConsultas_Load(object sender, EventArgs e) { }
     }
 }

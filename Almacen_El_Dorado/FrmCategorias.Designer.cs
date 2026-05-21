@@ -117,6 +117,7 @@
             this.Controls.Add(this.lblCategoria);
             this.Name = "FrmCategorias";
             this.Text = "FrmCategorias";
+            this.Load += new System.EventHandler(this.FrmCategorias_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

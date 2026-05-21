@@ -1,223 +1,159 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using Almacen_El_Dorado.Database;
+using System.Data.SqlClient;
 
 namespace Almacen_El_Dorado
 {
     public partial class FrmProductos : Form
     {
-        // ========== LISTA TEMPORAL DE PRODUCTOS (SIN BD) ==========
-        List<Producto> listaProductos = new List<Producto>();
-
-        // Variables para controlar edición
+        // variables para controlar edicion
         bool editando = false;
         int idActual = 0;
 
-        // ========== CONSTRUCTOR ==========
+        // constructor
         public FrmProductos()
         {
             InitializeComponent();
-
-            // Configurar la tabla
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new System.Drawing.Size(1100, 700);
             ConfigurarDataGridView();
-
-            // Cargar categorías en el ComboBox
             CargarCategorias();
-
-            // Cargar productos de ejemplo
-            CargarProductosEjemplo();
-
-            // Mostrar productos en la tabla
-            MostrarProductos();
+            CargarProductos();
         }
 
-        // ========== CLASE PRODUCTO ==========
-        class Producto
-        {
-            public int Id { get; set; }
-            public string Codigo { get; set; }
-            public string Nombre { get; set; }
-            public decimal Precio { get; set; }
-            public int Stock { get; set; }
-            public string Categoria { get; set; }
-        }
-
-        // ========== CARGAR CATEGORÍAS EN EL COMBOBOX ==========
-        private void CargarCategorias()
-        {
-            cmbCategoria.Items.Clear();
-            cmbCategoria.Items.Add("Electrónica");
-            cmbCategoria.Items.Add("Ropa");
-            cmbCategoria.Items.Add("Alimentos");
-            cmbCategoria.Items.Add("Hogar");
-            cmbCategoria.Items.Add("Papelería");
-            cmbCategoria.Items.Add("Herramientas");
-
-            cmbCategoria.SelectedIndex = 0;
-            cmbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
-        }
-
-        // ========== CONFIGURAR LA TABLA (DataGridView) ==========
+        // configurar el data grid view
         private void ConfigurarDataGridView()
         {
-            // Limpiar columnas existentes
             dgvProductos.Columns.Clear();
-
-            // Crear columnas
-            dgvProductos.Columns.Add("Id", "ID");
-            dgvProductos.Columns.Add("Codigo", "Código");
+            dgvProductos.Columns.Add("IdProducto", "ID");
+            dgvProductos.Columns.Add("Codigo", "Codigo");
             dgvProductos.Columns.Add("Nombre", "Nombre");
             dgvProductos.Columns.Add("Precio", "Precio");
             dgvProductos.Columns.Add("Stock", "Stock");
-            dgvProductos.Columns.Add("Categoria", "Categoría");
+            dgvProductos.Columns.Add("Categoria", "Categoria");
 
-            // Configurar ancho de columnas
-            dgvProductos.Columns["Id"].Width = 50;
+            dgvProductos.Columns["IdProducto"].Width = 50;
             dgvProductos.Columns["Codigo"].Width = 100;
             dgvProductos.Columns["Nombre"].Width = 150;
             dgvProductos.Columns["Precio"].Width = 80;
             dgvProductos.Columns["Stock"].Width = 60;
             dgvProductos.Columns["Categoria"].Width = 100;
 
-            // Configurar selección
             dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProductos.MultiSelect = false;
             dgvProductos.AllowUserToAddRows = false;
-
-            // Evento para seleccionar fila
             dgvProductos.CellClick += dgvProductos_CellClick;
         }
 
-        // ========== CARGAR PRODUCTOS DE EJEMPLO ==========
-        private void CargarProductosEjemplo()
+        // cargar categorias en el combobox
+        private void CargarCategorias()
         {
-            listaProductos.Clear();
-
-            listaProductos.Add(new Producto
+            try
             {
-                Id = 1,
-                Codigo = "PROD001",
-                Nombre = "Laptop HP",
-                Precio = 5000.00m,
-                Stock = 10,
-                Categoria = "Electrónica"
-            });
-
-            listaProductos.Add(new Producto
-            {
-                Id = 2,
-                Codigo = "PROD002",
-                Nombre = "Mouse USB",
-                Precio = 150.00m,
-                Stock = 50,
-                Categoria = "Electrónica"
-            });
-
-            listaProductos.Add(new Producto
-            {
-                Id = 3,
-                Codigo = "PROD003",
-                Nombre = "Camisa Polo",
-                Precio = 250.00m,
-                Stock = 30,
-                Categoria = "Ropa"
-            });
-
-            listaProductos.Add(new Producto
-            {
-                Id = 4,
-                Codigo = "PROD004",
-                Nombre = "Teclado USB",
-                Precio = 300.00m,
-                Stock = 8,
-                Categoria = "Electrónica"
-            });
-
-            listaProductos.Add(new Producto
-            {
-                Id = 5,
-                Codigo = "PROD005",
-                Nombre = "Silla Gamer",
-                Precio = 1200.00m,
-                Stock = 3,
-                Categoria = "Hogar"
-            });
-        }
-
-        // ========== MOSTRAR PRODUCTOS EN EL DataGridView ==========
-        private void MostrarProductos(string filtro = "")
-        {
-            // Limpiar la tabla
-            dgvProductos.Rows.Clear();
-
-            int fila = 0;
-
-            // Recorrer todos los productos
-            foreach (Producto p in listaProductos)
-            {
-                // Si hay filtro, verificar si coincide
-                if (filtro != "")
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
-                    if (!p.Nombre.ToLower().Contains(filtro.ToLower()) &&
-                        !p.Codigo.ToLower().Contains(filtro.ToLower()))
+                    conn.Open();
+                    string query = "SELECT IdCategoria, Nombre FROM Categorias ORDER BY Nombre";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    cmbCategoria.Items.Clear();
+                    while (reader.Read())
                     {
-                        continue; // Saltar este producto
+                        string item = reader["IdCategoria"].ToString() + " - " + reader["Nombre"].ToString();
+                        cmbCategoria.Items.Add(item);
                     }
-                }
+                    reader.Close();
 
-                // Agregar fila
-                dgvProductos.Rows.Add();
-                dgvProductos.Rows[fila].Cells[0].Value = p.Id;
-                dgvProductos.Rows[fila].Cells[1].Value = p.Codigo;
-                dgvProductos.Rows[fila].Cells[2].Value = p.Nombre;
-                dgvProductos.Rows[fila].Cells[3].Value = p.Precio.ToString("0.00");
-                dgvProductos.Rows[fila].Cells[4].Value = p.Stock;
-                dgvProductos.Rows[fila].Cells[5].Value = p.Categoria;
-
-                // Cambiar color si stock bajo (menos de 5)
-                if (p.Stock <= 5)
-                {
-                    dgvProductos.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
+                    if (cmbCategoria.Items.Count > 0)
+                    {
+                        cmbCategoria.SelectedIndex = 0;
+                    }
+                    cmbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
                 }
-                else if (p.Stock <= 10)
-                {
-                    dgvProductos.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightYellow;
-                }
-
-                fila++;
             }
-
-            // Mostrar mensaje si no hay resultados
-            if (fila == 0 && filtro != "")
+            catch (Exception ex)
             {
-                MessageBox.Show("No se encontraron productos con: " + filtro, "Búsqueda",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                MostrarProductos(); // Recargar todos
-                txtBuscar.Text = "";
+                MessageBox.Show("Error al cargar categorias: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ========== LIMPIAR CAMPOS DEL FORMULARIO ==========
+        // metodo para cargar productos desde la base de datos
+        private void CargarProductos(string filtro = "")
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                {
+                    conn.Open();
+                    string query;
+
+                    if (filtro == "")
+                    {
+                        query = @"SELECT p.IdProducto, p.Codigo, p.Nombre, p.Precio, p.Stock, c.Nombre as Categoria 
+                                 FROM Productos p 
+                                 INNER JOIN Categorias c ON p.IdCategoria = c.IdCategoria 
+                                 ORDER BY p.IdProducto";
+                    }
+                    else
+                    {
+                        query = @"SELECT p.IdProducto, p.Codigo, p.Nombre, p.Precio, p.Stock, c.Nombre as Categoria 
+                                 FROM Productos p 
+                                 INNER JOIN Categorias c ON p.IdCategoria = c.IdCategoria 
+                                 WHERE p.Nombre LIKE @filtro OR p.Codigo LIKE @filtro 
+                                 ORDER BY p.Nombre";
+                    }
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    if (filtro != "")
+                    {
+                        cmd.Parameters.AddWithValue("@filtro", "%" + filtro + "%");
+                    }
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    dgvProductos.Rows.Clear();
+
+                    while (reader.Read())
+                    {
+                        dgvProductos.Rows.Add(
+                            reader["IdProducto"].ToString(),
+                            reader["Codigo"].ToString(),
+                            reader["Nombre"].ToString(),
+                            Convert.ToDecimal(reader["Precio"]).ToString("0.00"),
+                            reader["Stock"].ToString(),
+                            reader["Categoria"].ToString()
+                        );
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar productos: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // limpiar campos del formulario
         private void LimpiarCampos()
         {
             txtCodigo.Text = "";
             txtNombre.Text = "";
             txtPrecio.Text = "";
             txtStock.Text = "";
-            cmbCategoria.SelectedIndex = 0;
-
+            if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
             editando = false;
             idActual = 0;
-
             txtCodigo.Focus();
         }
 
-        // ========== VALIDAR QUE LOS CAMPOS ESTÉN LLENOS ==========
+        // validar campos obligatorios
         private bool ValidarCampos()
         {
             if (txtCodigo.Text == "")
             {
-                MessageBox.Show("❌ Ingrese el código del producto", "Validación",
+                MessageBox.Show("Ingrese el codigo del producto", "Validacion",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtCodigo.Focus();
                 return false;
@@ -225,7 +161,7 @@ namespace Almacen_El_Dorado
 
             if (txtNombre.Text == "")
             {
-                MessageBox.Show("❌ Ingrese el nombre del producto", "Validación",
+                MessageBox.Show("Ingrese el nombre del producto", "Validacion",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNombre.Focus();
                 return false;
@@ -233,301 +169,257 @@ namespace Almacen_El_Dorado
 
             if (txtPrecio.Text == "")
             {
-                MessageBox.Show("❌ Ingrese el precio del producto", "Validación",
+                MessageBox.Show("Ingrese el precio del producto", "Validacion",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrecio.Focus();
                 return false;
             }
 
-            // Validar que precio sea número
             decimal precio;
             if (!decimal.TryParse(txtPrecio.Text, out precio))
             {
-                MessageBox.Show("❌ El precio debe ser un número válido\nEjemplo: 99.99", "Validación",
+                MessageBox.Show("El precio debe ser un numero valido", "Validacion",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrecio.Focus();
                 return false;
             }
 
-            // Validar que precio no sea negativo
             if (precio < 0)
             {
-                MessageBox.Show("❌ El precio no puede ser negativo", "Validación",
+                MessageBox.Show("El precio no puede ser negativo", "Validacion",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPrecio.Focus();
                 return false;
-            }
-
-            // Validar que stock sea número (si está lleno)
-            if (txtStock.Text != "")
-            {
-                int stock;
-                if (!int.TryParse(txtStock.Text, out stock))
-                {
-                    MessageBox.Show("❌ La cantidad debe ser un número válido", "Validación",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtStock.Focus();
-                    return false;
-                }
-
-                if (stock < 0)
-                {
-                    MessageBox.Show("❌ El stock no puede ser negativo", "Validación",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtStock.Focus();
-                    return false;
-                }
             }
 
             return true;
         }
 
-        // ========== BOTÓN NUEVO ==========
+        // boton nuevo
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
+            dgvProductos.ClearSelection();
         }
 
-        // ========== BOTÓN GUARDAR ==========
+        // boton guardar
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // Validar campos
-            if (!ValidarCampos())
-                return;
+            if (!ValidarCampos()) return;
 
-            if (!editando)
+            // obtener id de categoria seleccionada
+            int idCategoria = 0;
+            if (cmbCategoria.SelectedIndex >= 0)
             {
-                // ===== AGREGAR NUEVO PRODUCTO =====
-
-                // Verificar que el código no exista ya
-                foreach (Producto p in listaProductos)
-                {
-                    if (p.Codigo == txtCodigo.Text)
-                    {
-                        MessageBox.Show("❌ Ya existe un producto con el código: " + txtCodigo.Text,
-                            "Código duplicado",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtCodigo.Focus();
-                        return;
-                    }
-                }
-
-                // Calcular nuevo ID
-                int nuevoId = 1;
-                if (listaProductos.Count > 0)
-                {
-                    nuevoId = listaProductos[listaProductos.Count - 1].Id + 1;
-                }
-
-                // Crear nuevo producto
-                Producto nuevo = new Producto();
-                nuevo.Id = nuevoId;
-                nuevo.Codigo = txtCodigo.Text;
-                nuevo.Nombre = txtNombre.Text;
-                nuevo.Precio = decimal.Parse(txtPrecio.Text);
-                nuevo.Stock = txtStock.Text == "" ? 0 : int.Parse(txtStock.Text);
-                nuevo.Categoria = cmbCategoria.SelectedItem.ToString();
-
-                // Agregar a la lista
-                listaProductos.Add(nuevo);
-
-                MessageBox.Show("✅ Producto guardado correctamente", "Éxito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                // ===== EDITAR PRODUCTO EXISTENTE =====
-
-                // Verificar que el código no exista en otro producto
-                foreach (Producto p in listaProductos)
-                {
-                    if (p.Codigo == txtCodigo.Text && p.Id != idActual)
-                    {
-                        MessageBox.Show("❌ Ya existe otro producto con el código: " + txtCodigo.Text,
-                            "Código duplicado",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtCodigo.Focus();
-                        return;
-                    }
-                }
-
-                // Buscar y actualizar producto
-                for (int i = 0; i < listaProductos.Count; i++)
-                {
-                    if (listaProductos[i].Id == idActual)
-                    {
-                        listaProductos[i].Codigo = txtCodigo.Text;
-                        listaProductos[i].Nombre = txtNombre.Text;
-                        listaProductos[i].Precio = decimal.Parse(txtPrecio.Text);
-                        listaProductos[i].Stock = txtStock.Text == "" ? 0 : int.Parse(txtStock.Text);
-                        listaProductos[i].Categoria = cmbCategoria.SelectedItem.ToString();
-                        break;
-                    }
-                }
-
-                MessageBox.Show("✅ Producto actualizado correctamente", "Éxito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                editando = false;
-                idActual = 0;
+                string seleccion = cmbCategoria.SelectedItem.ToString();
+                idCategoria = Convert.ToInt32(seleccion.Split('-')[0].Trim());
             }
 
-            // Actualizar la tabla
-            MostrarProductos();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                {
+                    conn.Open();
 
-            // Limpiar campos
-            LimpiarCampos();
+                    if (!editando)
+                    {
+                        // verificar si el codigo ya existe
+                        string checkQuery = "SELECT COUNT(*) FROM Productos WHERE Codigo = @codigo";
+                        SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                        checkCmd.Parameters.AddWithValue("@codigo", txtCodigo.Text);
+                        int existe = (int)checkCmd.ExecuteScalar();
+
+                        if (existe > 0)
+                        {
+                            MessageBox.Show("Ya existe un producto con el codigo: " + txtCodigo.Text, "Duplicado",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            txtCodigo.Focus();
+                            return;
+                        }
+
+                        // insertar nuevo producto
+                        string query = @"INSERT INTO Productos (Codigo, Nombre, Precio, Stock, IdCategoria) 
+                                       VALUES (@codigo, @nombre, @precio, @stock, @idCategoria)";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text);
+                        cmd.Parameters.AddWithValue("@nombre", txtNombre.Text);
+                        cmd.Parameters.AddWithValue("@precio", decimal.Parse(txtPrecio.Text));
+                        cmd.Parameters.AddWithValue("@stock", txtStock.Text == "" ? 0 : int.Parse(txtStock.Text));
+                        cmd.Parameters.AddWithValue("@idCategoria", idCategoria);
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Producto guardado correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        // verificar si el codigo existe en otro producto
+                        string checkQuery = "SELECT COUNT(*) FROM Productos WHERE Codigo = @codigo AND IdProducto != @id";
+                        SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                        checkCmd.Parameters.AddWithValue("@codigo", txtCodigo.Text);
+                        checkCmd.Parameters.AddWithValue("@id", idActual);
+                        int existe = (int)checkCmd.ExecuteScalar();
+
+                        if (existe > 0)
+                        {
+                            MessageBox.Show("Ya existe otro producto con el codigo: " + txtCodigo.Text, "Duplicado",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            txtCodigo.Focus();
+                            return;
+                        }
+
+                        // actualizar producto existente
+                        string query = @"UPDATE Productos SET Codigo=@codigo, Nombre=@nombre, Precio=@precio, 
+                                       Stock=@stock, IdCategoria=@idCategoria WHERE IdProducto=@id";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@id", idActual);
+                        cmd.Parameters.AddWithValue("@codigo", txtCodigo.Text);
+                        cmd.Parameters.AddWithValue("@nombre", txtNombre.Text);
+                        cmd.Parameters.AddWithValue("@precio", decimal.Parse(txtPrecio.Text));
+                        cmd.Parameters.AddWithValue("@stock", txtStock.Text == "" ? 0 : int.Parse(txtStock.Text));
+                        cmd.Parameters.AddWithValue("@idCategoria", idCategoria);
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Producto actualizado correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        editando = false;
+                        idActual = 0;
+                    }
+                }
+
+                CargarProductos();
+                LimpiarCampos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar producto: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        // ========== BOTÓN EDITAR ==========
+        // boton editar
         private void btnEditar_Click(object sender, EventArgs e)
         {
-            // Verificar que haya una fila seleccionada
             if (dgvProductos.SelectedRows.Count == 0)
             {
-                MessageBox.Show("⚠️ Seleccione un producto para editar\n\nHaga clic en la fila del producto que desea editar.",
-                    "Aviso",
+                MessageBox.Show("Seleccione un producto para editar", "Aviso",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Obtener ID del producto seleccionado
-            int id = Convert.ToInt32(dgvProductos.SelectedRows[0].Cells[0].Value);
+            idActual = Convert.ToInt32(dgvProductos.SelectedRows[0].Cells[0].Value);
+            txtCodigo.Text = dgvProductos.SelectedRows[0].Cells[1].Value.ToString();
+            txtNombre.Text = dgvProductos.SelectedRows[0].Cells[2].Value.ToString();
+            txtPrecio.Text = dgvProductos.SelectedRows[0].Cells[3].Value.ToString();
+            txtStock.Text = dgvProductos.SelectedRows[0].Cells[4].Value.ToString();
 
-            // Buscar el producto
-            foreach (Producto p in listaProductos)
+            // seleccionar la categoria correcta en el combobox
+            string categoriaProducto = dgvProductos.SelectedRows[0].Cells[5].Value.ToString();
+            for (int i = 0; i < cmbCategoria.Items.Count; i++)
             {
-                if (p.Id == id)
+                if (cmbCategoria.Items[i].ToString().Contains(categoriaProducto))
                 {
-                    // Cargar datos en los campos
-                    txtCodigo.Text = p.Codigo;
-                    txtNombre.Text = p.Nombre;
-                    txtPrecio.Text = p.Precio.ToString();
-                    txtStock.Text = p.Stock.ToString();
-                    cmbCategoria.SelectedItem = p.Categoria;
-
-                    editando = true;
-                    idActual = p.Id;
+                    cmbCategoria.SelectedIndex = i;
                     break;
                 }
             }
 
+            editando = true;
             txtCodigo.Focus();
         }
 
-        // ========== BOTÓN ELIMINAR ==========
+        // boton eliminar
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            // Verificar que haya una fila seleccionada
             if (dgvProductos.SelectedRows.Count == 0)
             {
-                MessageBox.Show("⚠️ Seleccione un producto para eliminar\n\nHaga clic en la fila del producto que desea eliminar.",
-                    "Aviso",
+                MessageBox.Show("Seleccione un producto para eliminar", "Aviso",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Obtener nombre del producto para mostrar en mensaje
-            string nombreProducto = dgvProductos.SelectedRows[0].Cells[2].Value.ToString();
+            int id = Convert.ToInt32(dgvProductos.SelectedRows[0].Cells[0].Value);
+            string nombre = dgvProductos.SelectedRows[0].Cells[2].Value.ToString();
 
-            // Confirmar eliminación
-            DialogResult respuesta = MessageBox.Show($"¿Está seguro de eliminar el producto?\n\n📦 {nombreProducto}\n\nEsta acción no se puede deshacer.",
-                "Confirmar eliminación",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            DialogResult respuesta = MessageBox.Show("Esta seguro de eliminar el producto: " + nombre,
+                "Confirmar eliminacion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (respuesta == DialogResult.Yes)
             {
-                // Obtener ID
-                int id = Convert.ToInt32(dgvProductos.SelectedRows[0].Cells[0].Value);
-
-                // Buscar y eliminar
-                Producto productoEliminar = null;
-                foreach (Producto p in listaProductos)
+                try
                 {
-                    if (p.Id == id)
+                    using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                     {
-                        productoEliminar = p;
-                        break;
+                        conn.Open();
+                        string query = "DELETE FROM Productos WHERE IdProducto = @id";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Producto eliminado correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        CargarProductos();
+                        LimpiarCampos();
                     }
                 }
-
-                if (productoEliminar != null)
+                catch (Exception ex)
                 {
-                    listaProductos.Remove(productoEliminar);
-                    MessageBox.Show($"✅ Producto eliminado correctamente\n\n📦 {nombreProducto}",
-                        "Éxito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Actualizar tabla
-                    MostrarProductos();
-                    LimpiarCampos();
+                    MessageBox.Show("Error al eliminar producto: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        // ========== BOTÓN LIMPIAR ==========
+        // boton limpiar
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
-            MostrarProductos(); // Refrescar tabla por si había filtro
-            txtBuscar.Text = ""; // Limpiar búsqueda también
-
-            // Quitar selección del DataGridView
+            CargarProductos();
+            txtBuscar.Text = "";
             dgvProductos.ClearSelection();
         }
 
-        // ========== BOTÓN BUSCAR ==========
+        // boton buscar
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             string textoBuscar = txtBuscar.Text.Trim();
             if (textoBuscar == "")
             {
-                MostrarProductos();
+                CargarProductos();
             }
             else
             {
-                MostrarProductos(textoBuscar);
+                CargarProductos(textoBuscar);
             }
         }
 
-        // ========== PRESIONAR ENTER EN BÚSQUEDA ==========
-        private void txtBuscar_TextChanged(object sender, EventArgs e)
-        {
-            // Búsqueda automática mientras escribe (opcional)
-            // Si quieres búsqueda automática, descomenta la línea de abajo
-            // MostrarProductos(txtBuscar.Text);
-        }
-
-        // ========== CLICK EN DATAGRIDVIEW ==========
+        // click en data grid view
         private void dgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Evitar que seleccione el encabezado
             if (e.RowIndex >= 0)
             {
                 dgvProductos.Rows[e.RowIndex].Selected = true;
             }
         }
 
-        // ========== EVENTO PARA CUANDO SE SELECCIONA UNA CATEGORÍA ==========
-        private void cmbCategoria_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // No necesita código, solo está aquí para evitar error
-        }
-
-        // ========== EVENTOS DE TEXTO (no necesitan código) ==========
-        private void txtCodigo_TextChanged(object sender, EventArgs e) { }
-        private void txtNombre_TextChanged(object sender, EventArgs e) { }
-        private void txtPrecio_TextChanged(object sender, EventArgs e) { }
-        private void txtStock_TextChanged(object sender, EventArgs e) { }
-        private void dgvProductos_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-        private void label1_Click(object sender, EventArgs e) { }
-
+        // volver al menu principal
         private void btnVolver_Click(object sender, EventArgs e)
         {
             this.Close();
             FrmPrincipal principal = new FrmPrincipal();
             principal.Show();
         }
+
+        // eventos vacios
+        private void cmbCategoria_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void txtCodigo_TextChanged(object sender, EventArgs e) { }
+        private void txtNombre_TextChanged(object sender, EventArgs e) { }
+        private void txtPrecio_TextChanged(object sender, EventArgs e) { }
+        private void txtStock_TextChanged(object sender, EventArgs e) { }
+        private void dgvProductos_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void label1_Click(object sender, EventArgs e) { }
+        private void txtBuscar_TextChanged(object sender, EventArgs e) { }
+        private void FrmProductos_Load(object sender, EventArgs e) { }
     }
 }

@@ -1,153 +1,161 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using Almacen_El_Dorado.Database;
+using System.Data.SqlClient;
 
 namespace Almacen_El_Dorado
 {
     public partial class FrmCategorias : Form
     {
-        // Lista de categorias
-        List<string> listaCategorias = new List<string>();
-
-        // ========== CONSTRUCTOR ==========
         public FrmCategorias()
         {
             InitializeComponent();
-
-            // Cargar categorias de ejemplo
-            CargarCategoriasEjemplo();
-
-            // Mostrar categorias en el ListBox
-            MostrarCategorias();
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new System.Drawing.Size(500, 450);
+            CargarCategorias();
         }
 
-        // ========== CARGAR CATEGORIAS DE EJEMPLO ==========
-        private void CargarCategoriasEjemplo()
+        // metodo para cargar categorias desde la base de datos
+        private void CargarCategorias()
         {
-            listaCategorias.Clear();
-            listaCategorias.Add("Electronica");
-            listaCategorias.Add("Ropa");
-            listaCategorias.Add("Alimentos");
-            listaCategorias.Add("Hogar");
-            listaCategorias.Add("Papeleria");
-            listaCategorias.Add("Herramientas");
-        }
-
-        // ========== MOSTRAR CATEGORIAS EN EL LISTBOX ==========
-        private void MostrarCategorias()
-        {
-            lstCategorias.Items.Clear();
-
-            foreach (string categoria in listaCategorias)
+            try
             {
-                lstCategorias.Items.Add(categoria);
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT IdCategoria, Nombre FROM Categorias ORDER BY Nombre";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    lstCategorias.Items.Clear();
+                    while (reader.Read())
+                    {
+                        string item = reader["IdCategoria"].ToString() + " - " + reader["Nombre"].ToString();
+                        lstCategorias.Items.Add(item);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar categorias: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ========== AGREGAR CATEGORIA ==========
+        // evento del boton agregar categoria
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            // Validar que no este vacio
+            // validar que no este vacio
             if (txtCategoria.Text == "")
             {
-                MessageBox.Show("Ingrese el nombre de la categoria",
-                    "Validacion",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese el nombre de la categoria", "Validacion",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtCategoria.Focus();
                 return;
             }
 
-            // Validar que no exista ya
-            foreach (string cat in listaCategorias)
+            try
             {
-                if (cat.ToLower() == txtCategoria.Text.ToLower())
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
-                    MessageBox.Show("La categoria '" + txtCategoria.Text + "' ya existe",
-                        "Categoria duplicada",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    conn.Open();
+
+                    // verificar si ya existe
+                    string checkQuery = "SELECT COUNT(*) FROM Categorias WHERE Nombre = @nombre";
+                    SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                    checkCmd.Parameters.AddWithValue("@nombre", txtCategoria.Text);
+                    int existe = (int)checkCmd.ExecuteScalar();
+
+                    if (existe > 0)
+                    {
+                        MessageBox.Show("La categoria '" + txtCategoria.Text + "' ya existe", "Duplicado",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        txtCategoria.Text = "";
+                        txtCategoria.Focus();
+                        return;
+                    }
+
+                    // insertar nueva categoria
+                    string insertQuery = "INSERT INTO Categorias (Nombre) VALUES (@nombre)";
+                    SqlCommand insertCmd = new SqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@nombre", txtCategoria.Text);
+                    insertCmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Categoria agregada correctamente", "Exito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                     txtCategoria.Text = "";
+                    CargarCategorias();
                     txtCategoria.Focus();
-                    return;
                 }
             }
-
-            // Guardar nombre para el mensaje
-            string nombreCategoria = txtCategoria.Text;
-
-            // Agregar nueva categoria
-            listaCategorias.Add(txtCategoria.Text);
-
-            // Actualizar lista
-            MostrarCategorias();
-
-            // Limpiar campo
-            txtCategoria.Text = "";
-            txtCategoria.Focus();
-
-            MessageBox.Show("Categoria '" + nombreCategoria + "' agregada correctamente",
-                "Exito",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al agregar categoria: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        // ========== ELIMINAR CATEGORIA ==========
+        // evento del boton eliminar categoria
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            // Verificar que haya una categoria seleccionada
+            // verificar que haya una categoria seleccionada
             if (lstCategorias.SelectedIndex == -1)
             {
-                MessageBox.Show("Seleccione una categoria para eliminar",
-                    "Aviso",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione una categoria para eliminar", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Obtener la categoria seleccionada
-            string categoriaSeleccionada = lstCategorias.SelectedItem.ToString();
+            // obtener el id de la categoria seleccionada
+            string seleccionado = lstCategorias.SelectedItem.ToString();
+            int idCategoria = Convert.ToInt32(seleccionado.Split('-')[0].Trim());
+            string nombreCategoria = seleccionado.Split('-')[1].Trim();
 
-            // Confirmar eliminacion
-            DialogResult respuesta = MessageBox.Show("Esta seguro de eliminar la categoria:\n\n" +
-                categoriaSeleccionada + "\n\nEsta accion no se puede deshacer.",
+            // confirmar eliminacion
+            DialogResult respuesta = MessageBox.Show("Esta seguro de eliminar la categoria: " + nombreCategoria,
                 "Confirmar eliminacion",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
             if (respuesta == DialogResult.Yes)
             {
-                // Eliminar de la lista
-                listaCategorias.RemoveAt(lstCategorias.SelectedIndex);
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                    {
+                        conn.Open();
+                        string query = "DELETE FROM Categorias WHERE IdCategoria = @id";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@id", idCategoria);
+                        cmd.ExecuteNonQuery();
 
-                // Actualizar lista
-                MostrarCategorias();
+                        MessageBox.Show("Categoria eliminada correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                MessageBox.Show("Categoria eliminada correctamente",
-                    "Exito",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                        CargarCategorias();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al eliminar categoria: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-        // ========== EVENTO CUANDO SE SELECCIONA UNA CATEGORIA ==========
-        private void lstCategorias_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Este evento se ejecuta cuando se selecciona un item
-            // No necesita codigo adicional, pero lo dejamos para referencia
-        }
-
-        // ========== EVENTO CUANDO CAMBIA EL TEXTO (no necesita codigo) ==========
-        private void txtCategoria_TextChanged(object sender, EventArgs e)
-        {
-            // No necesita codigo
-        }
-
+        // evento para volver al menu principal
         private void btnVolver_Click(object sender, EventArgs e)
         {
             this.Close();
             FrmPrincipal principal = new FrmPrincipal();
             principal.Show();
         }
+
+        // eventos vacios
+        private void lstCategorias_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void txtCategoria_TextChanged(object sender, EventArgs e) { }
+        private void FrmCategorias_Load(object sender, EventArgs e) { }
     }
 }

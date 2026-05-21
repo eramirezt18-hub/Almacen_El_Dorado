@@ -5,19 +5,26 @@ namespace Almacen_El_Dorado
 {
     public partial class FrmPrincipal : Form
     {
-        string usuarioActual = "admin";
+        // variable para guardar el usuario actual
+        string usuarioActual = "AdminSistema";
 
         public FrmPrincipal()
         {
             InitializeComponent();
 
-            // Configurar ventana normal (NO MDI)
-            this.WindowState = FormWindowState.Maximized;
+            // configurar ventana normal (no maximizada)
+            this.WindowState = FormWindowState.Normal;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new System.Drawing.Size(1024, 768);
 
+            // mostrar usuario en barra de estado
             MostrarUsuarioEnStatusStrip();
+
+            // iniciar el timer para la hora
             timer1.Start();
         }
 
+        // metodo para mostrar el usuario en la barra de estado
         private void MostrarUsuarioEnStatusStrip()
         {
             try
@@ -36,6 +43,7 @@ namespace Almacen_El_Dorado
             catch (Exception) { }
         }
 
+        // timer para actualizar la hora cada segundo
         private void timer1_Tick(object sender, EventArgs e)
         {
             try
@@ -54,13 +62,14 @@ namespace Almacen_El_Dorado
             catch (Exception) { }
         }
 
-        // ========== METODO PARA ABRIR FORMULARIOS (SIMPLE) ==========
+        // metodo para abrir formularios
         private void AbrirFormulario(Form formulario)
         {
             formulario.StartPosition = FormStartPosition.CenterScreen;
-            formulario.WindowState = FormWindowState.Maximized;
+            formulario.WindowState = FormWindowState.Normal;
+            formulario.Size = new System.Drawing.Size(1024, 768);
             formulario.Show();
-            this.Hide(); // Ocultar el principal mientras el otro form esta abierto
+            this.Hide();
         }
 
         // ========== MENU ARCHIVO ==========

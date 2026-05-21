@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\Conexion.cs" />
+    <Compile Include="Database\DataBaseHelper.cs" />
     <Compile Include="FrmCategorias.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,5 +142,6 @@
   <ItemGroup>
     <None Include="Resources\logoalmacen20052026jpeg.jpeg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

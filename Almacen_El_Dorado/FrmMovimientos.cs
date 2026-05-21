@@ -1,167 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using Almacen_El_Dorado.Database;
+using System.Data.SqlClient;
 
 namespace Almacen_El_Dorado
 {
     public partial class FrmMovimientos : Form
     {
-        // ========== LISTAS TEMPORALES ==========
-        List<Movimiento> listaMovimientos = new List<Movimiento>();
-        List<ProductoSimple> listaProductos = new List<ProductoSimple>();
-
-        // ========== CONSTRUCTOR ==========
         public FrmMovimientos()
         {
             InitializeComponent();
-
-            // Configurar el NumericUpDown
-            nudCantidad.Minimum = 1;
-            nudCantidad.Maximum = 9999;
-            nudCantidad.Value = 1;
-
-            // Cargar productos de ejemplo
-            CargarProductos();
-
-            // Cargar productos en el ComboBox
-            CargarComboProductos();
-
-            // Cargar movimientos de ejemplo
-            CargarMovimientosEjemplo();
-
-            // Configurar DataGridView
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new System.Drawing.Size(1000, 650);
             ConfigurarDataGridView();
-
-            // Mostrar movimientos
-            MostrarMovimientos();
-
-            // Seleccionar Entrada por defecto
+            CargarComboProductos();
+            CargarMovimientos();
             rbEntrada.Checked = true;
-
-            // Actualizar stock mostrado
-            ActualizarStockMostrado();
         }
 
-        // ========== CLASE PRODUCTO (SIMPLIFICADA) ==========
-        class ProductoSimple
-        {
-            public int Id { get; set; }
-            public string Codigo { get; set; }
-            public string Nombre { get; set; }
-            public int Stock { get; set; }
-            public decimal Precio { get; set; }
-        }
-
-        // ========== CLASE MOVIMIENTO ==========
-        class Movimiento
-        {
-            public int Id { get; set; }
-            public DateTime Fecha { get; set; }
-            public string Tipo { get; set; }
-            public string ProductoNombre { get; set; }
-            public int Cantidad { get; set; }
-            public int ProductoId { get; set; }
-        }
-
-        // ========== CARGAR PRODUCTOS DE EJEMPLO ==========
-        private void CargarProductos()
-        {
-            listaProductos.Clear();
-
-            listaProductos.Add(new ProductoSimple
-            {
-                Id = 1,
-                Codigo = "PROD001",
-                Nombre = "Laptop HP",
-                Stock = 10,
-                Precio = 5000
-            });
-
-            listaProductos.Add(new ProductoSimple
-            {
-                Id = 2,
-                Codigo = "PROD002",
-                Nombre = "Mouse USB",
-                Stock = 50,
-                Precio = 150
-            });
-
-            listaProductos.Add(new ProductoSimple
-            {
-                Id = 3,
-                Codigo = "PROD003",
-                Nombre = "Camisa Polo",
-                Stock = 30,
-                Precio = 250
-            });
-
-            listaProductos.Add(new ProductoSimple
-            {
-                Id = 4,
-                Codigo = "PROD004",
-                Nombre = "Teclado USB",
-                Stock = 8,
-                Precio = 300
-            });
-
-            listaProductos.Add(new ProductoSimple
-            {
-                Id = 5,
-                Codigo = "PROD005",
-                Nombre = "Silla Gamer",
-                Stock = 3,
-                Precio = 1200
-            });
-        }
-
-        // ========== CARGAR PRODUCTOS EN EL COMBOBOX ==========
-        private void CargarComboProductos()
-        {
-            cmbProducto.Items.Clear();
-
-            foreach (ProductoSimple p in listaProductos)
-            {
-                // Mostrar: ID - Nombre (Stock: X)
-                cmbProducto.Items.Add($"{p.Id} - {p.Nombre} (Stock: {p.Stock})");
-            }
-
-            if (cmbProducto.Items.Count > 0)
-            {
-                cmbProducto.SelectedIndex = 0;
-            }
-        }
-
-        // ========== CARGAR MOVIMIENTOS DE EJEMPLO ==========
-        private void CargarMovimientosEjemplo()
-        {
-            listaMovimientos.Clear();
-
-            listaMovimientos.Add(new Movimiento
-            {
-                Id = 1,
-                Fecha = DateTime.Now.AddDays(-2),
-                Tipo = "ENTRADA",
-                ProductoNombre = "Laptop HP",
-                Cantidad = 5,
-                ProductoId = 1
-            });
-
-            listaMovimientos.Add(new Movimiento
-            {
-                Id = 2,
-                Fecha = DateTime.Now.AddDays(-1),
-                Tipo = "SALIDA",
-                ProductoNombre = "Mouse USB",
-                Cantidad = 3,
-                ProductoId = 2
-            });
-        }
-
-        // ========== CONFIGURAR DATAGRIDVIEW ==========
+        // configurar data grid view
         private void ConfigurarDataGridView()
         {
             dgvMovimientos.Columns.Clear();
-
             dgvMovimientos.Columns.Add("Fecha", "Fecha");
             dgvMovimientos.Columns.Add("Tipo", "Tipo");
             dgvMovimientos.Columns.Add("Producto", "Producto");
@@ -169,226 +29,274 @@ namespace Almacen_El_Dorado
 
             dgvMovimientos.Columns["Fecha"].Width = 130;
             dgvMovimientos.Columns["Tipo"].Width = 80;
-            dgvMovimientos.Columns["Producto"].Width = 150;
+            dgvMovimientos.Columns["Producto"].Width = 250;
             dgvMovimientos.Columns["Cantidad"].Width = 80;
 
             dgvMovimientos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvMovimientos.AllowUserToAddRows = false;
         }
 
-        // ========== MOSTRAR MOVIMIENTOS ==========
-        private void MostrarMovimientos()
+        // cargar productos en el combobox
+        private void CargarComboProductos()
         {
-            dgvMovimientos.Rows.Clear();
-
-            int fila = 0;
-            foreach (Movimiento m in listaMovimientos)
+            try
             {
-                dgvMovimientos.Rows.Add();
-                dgvMovimientos.Rows[fila].Cells[0].Value = m.Fecha.ToString("dd/MM/yyyy HH:mm");
-                dgvMovimientos.Rows[fila].Cells[1].Value = m.Tipo;
-                dgvMovimientos.Rows[fila].Cells[2].Value = m.ProductoNombre;
-                dgvMovimientos.Rows[fila].Cells[3].Value = m.Cantidad;
-
-                // Color diferente para entradas y salidas
-                if (m.Tipo == "ENTRADA")
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
-                    dgvMovimientos.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightGreen;
-                }
-                else
-                {
-                    dgvMovimientos.Rows[fila].DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
-                }
+                    conn.Open();
+                    string query = "SELECT IdProducto, Nombre, Stock FROM Productos ORDER BY Nombre";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
 
-                fila++;
+                    cmbProducto.Items.Clear();
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        string nombre = reader.GetString(1);
+                        int stock = reader.GetInt32(2);
+                        cmbProducto.Items.Add(id + " - " + nombre + " (Stock: " + stock + ")");
+                    }
+                    reader.Close();
+
+                    if (cmbProducto.Items.Count > 0)
+                    {
+                        cmbProducto.SelectedIndex = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar productos: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ========== ACTUALIZAR STOCK MOSTRADO ==========
+        // cargar historial de movimientos
+        private void CargarMovimientos()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                {
+                    conn.Open();
+                    string query = @"SELECT m.Fecha, m.Tipo, p.Nombre as Producto, m.Cantidad 
+                                   FROM Movimientos m 
+                                   INNER JOIN Productos p ON m.IdProducto = p.IdProducto 
+                                   ORDER BY m.Fecha DESC";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    dgvMovimientos.Rows.Clear();
+                    while (reader.Read())
+                    {
+                        dgvMovimientos.Rows.Add(
+                            Convert.ToDateTime(reader["Fecha"]).ToString("dd/MM/yyyy HH:mm"),
+                            reader["Tipo"].ToString(),
+                            reader["Producto"].ToString(),
+                            reader["Cantidad"].ToString()
+                        );
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar movimientos: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // actualizar stock mostrado
         private void ActualizarStockMostrado()
         {
             if (cmbProducto.SelectedIndex >= 0)
             {
-                int id = ObtenerIdProductoSeleccionado();
+                string seleccion = cmbProducto.SelectedItem.ToString();
+                int idProducto = Convert.ToInt32(seleccion.Split('-')[0].Trim());
 
-                foreach (ProductoSimple p in listaProductos)
+                try
                 {
-                    if (p.Id == id)
+                    using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                     {
-                        lblStockActual.Text = $"📦 Stock actual: {p.Stock} unidades";
-
-                        // Cambiar color si stock bajo
-                        if (p.Stock <= 5)
-                        {
-                            lblStockActual.ForeColor = System.Drawing.Color.Red;
-                        }
-                        else
-                        {
-                            lblStockActual.ForeColor = System.Drawing.Color.Black;
-                        }
-                        break;
+                        conn.Open();
+                        string query = "SELECT Stock FROM Productos WHERE IdProducto = @id";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@id", idProducto);
+                        int stock = Convert.ToInt32(cmd.ExecuteScalar());
+                        lblStockActual.Text = "Stock actual: " + stock + " unidades";
                     }
+                }
+                catch (Exception ex)
+                {
+                    lblStockActual.Text = "Stock actual: Error";
                 }
             }
         }
 
-        // ========== OBTENER ID DEL PRODUCTO SELECCIONADO ==========
+        // obtener id del producto seleccionado
         private int ObtenerIdProductoSeleccionado()
         {
             if (cmbProducto.SelectedIndex >= 0)
             {
-                string texto = cmbProducto.SelectedItem.ToString();
-                string idTexto = texto.Split('-')[0].Trim();
-                return int.Parse(idTexto);
+                string seleccion = cmbProducto.SelectedItem.ToString();
+                return Convert.ToInt32(seleccion.Split('-')[0].Trim());
             }
             return 0;
         }
 
-        // ========== OBTENER PRODUCTO POR ID ==========
-        private ProductoSimple ObtenerProductoPorId(int id)
-        {
-            foreach (ProductoSimple p in listaProductos)
-            {
-                if (p.Id == id)
-                    return p;
-            }
-            return null;
-        }
-
-        // ========== VALIDAR MOVIMIENTO ==========
+        // validar movimiento
         private bool ValidarMovimiento()
         {
-            // Verificar que haya un producto seleccionado
             if (cmbProducto.SelectedIndex < 0)
             {
-                MessageBox.Show(" Seleccione un producto", "Validación",
+                MessageBox.Show("Seleccione un producto", "Validacion",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            // Verificar cantidad
             int cantidad = (int)nudCantidad.Value;
             if (cantidad <= 0)
             {
-                MessageBox.Show(" La cantidad debe ser mayor a 0", "Validación",
+                MessageBox.Show("La cantidad debe ser mayor a 0", "Validacion",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
-            // Verificar stock si es salida
             if (rbSalida.Checked)
             {
                 int idProducto = ObtenerIdProductoSeleccionado();
-                ProductoSimple producto = ObtenerProductoPorId(idProducto);
-
-                if (producto.Stock < cantidad)
+                try
                 {
-                    MessageBox.Show($" No hay suficiente stock\n\n" +
-                        $"Producto: {producto.Nombre}\n" +
-                        $"Stock actual: {producto.Stock}\n" +
-                        $"Cantidad solicitada: {cantidad}",
-                        "Stock insuficiente",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                    {
+                        conn.Open();
+                        string query = "SELECT Stock, Nombre FROM Productos WHERE IdProducto = @id";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@id", idProducto);
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            int stock = reader.GetInt32(0);
+                            string nombre = reader.GetString(1);
+                            reader.Close();
+
+                            if (stock < cantidad)
+                            {
+                                MessageBox.Show("No hay suficiente stock\n\nProducto: " + nombre +
+                                    "\nStock actual: " + stock + "\nCantidad solicitada: " + cantidad,
+                                    "Stock insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return false;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al validar stock: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
-
             return true;
         }
 
-        // ========== REGISTRAR MOVIMIENTO ==========
+        // boton registrar movimiento
         private void btnRegistrar_Click(object sender, EventArgs e)
         {
-            // Validar
-            if (!ValidarMovimiento())
-                return;
+            if (!ValidarMovimiento()) return;
 
-            // Obtener datos
             int idProducto = ObtenerIdProductoSeleccionado();
-            ProductoSimple producto = ObtenerProductoPorId(idProducto);
             int cantidad = (int)nudCantidad.Value;
             string tipo = rbEntrada.Checked ? "ENTRADA" : "SALIDA";
 
-            // Actualizar stock del producto
-            if (tipo == "ENTRADA")
+            try
             {
-                producto.Stock += cantidad;
-            }
-            else
-            {
-                producto.Stock -= cantidad;
-            }
-
-            // Registrar movimiento
-            Movimiento nuevoMov = new Movimiento();
-            nuevoMov.Id = listaMovimientos.Count + 1;
-            nuevoMov.Fecha = DateTime.Now;
-            nuevoMov.Tipo = tipo;
-            nuevoMov.ProductoNombre = producto.Nombre;
-            nuevoMov.Cantidad = cantidad;
-            nuevoMov.ProductoId = producto.Id;
-
-            listaMovimientos.Add(nuevoMov);
-
-            // Actualizar ComboBox (para mostrar nuevo stock)
-            CargarComboProductos();
-
-            // Seleccionar el mismo producto
-            for (int i = 0; i < cmbProducto.Items.Count; i++)
-            {
-                if (cmbProducto.Items[i].ToString().Contains(idProducto.ToString()))
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
-                    cmbProducto.SelectedIndex = i;
-                    break;
+                    conn.Open();
+
+                    // iniciar transaccion
+                    SqlTransaction transaccion = conn.BeginTransaction();
+
+                    try
+                    {
+                        // actualizar stock del producto
+                        string updateStock;
+                        if (tipo == "ENTRADA")
+                        {
+                            updateStock = "UPDATE Productos SET Stock = Stock + @cantidad WHERE IdProducto = @id";
+                        }
+                        else
+                        {
+                            updateStock = "UPDATE Productos SET Stock = Stock - @cantidad WHERE IdProducto = @id";
+                        }
+
+                        SqlCommand cmdStock = new SqlCommand(updateStock, conn, transaccion);
+                        cmdStock.Parameters.AddWithValue("@cantidad", cantidad);
+                        cmdStock.Parameters.AddWithValue("@id", idProducto);
+                        cmdStock.ExecuteNonQuery();
+
+                        // registrar movimiento
+                        string insertMov = "INSERT INTO Movimientos (Tipo, Cantidad, Fecha, IdProducto) " +
+                                          "VALUES (@tipo, @cantidad, @fecha, @idProducto)";
+                        SqlCommand cmdMov = new SqlCommand(insertMov, conn, transaccion);
+                        cmdMov.Parameters.AddWithValue("@tipo", tipo);
+                        cmdMov.Parameters.AddWithValue("@cantidad", cantidad);
+                        cmdMov.Parameters.AddWithValue("@fecha", DateTime.Now);
+                        cmdMov.Parameters.AddWithValue("@idProducto", idProducto);
+                        cmdMov.ExecuteNonQuery();
+
+                        transaccion.Commit();
+
+                        MessageBox.Show("Movimiento registrado correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // refrescar datos
+                        CargarComboProductos();
+                        CargarMovimientos();
+                        ActualizarStockMostrado();
+                        nudCantidad.Value = 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        transaccion.Rollback();
+                        MessageBox.Show("Error al registrar movimiento: " + ex.Message, "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-
-            // Actualizar stock mostrado
-            ActualizarStockMostrado();
-
-            // Actualizar tabla de movimientos
-            MostrarMovimientos();
-
-            // Limpiar cantidad
-            nudCantidad.Value = 1;
-
-            // Mostrar mensaje de éxito
-            MessageBox.Show($"✅ Movimiento registrado correctamente\n\n" +
-                $" Producto: {producto.Nombre}\n" +
-                $"Tipo: {tipo}\n" +
-                $" Cantidad: {cantidad}\n" +
-                $"Nuevo stock: {producto.Stock}",
-                "Éxito",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error de conexion: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        // ========== LIMPIAR CAMPOS ==========
+        // boton limpiar
         private void btnLimpiarMov_Click(object sender, EventArgs e)
         {
             nudCantidad.Value = 1;
             rbEntrada.Checked = true;
-
             if (cmbProducto.Items.Count > 0)
+            {
                 cmbProducto.SelectedIndex = 0;
-
+            }
             ActualizarStockMostrado();
         }
 
-        // ========== CUANDO CAMBIA EL PRODUCTO SELECCIONADO ==========
+        // cambiar producto seleccionado
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActualizarStockMostrado();
         }
 
-        // ========== CUANDO CAMBIA EL TIPO DE MOVIMIENTO ==========
+        // cambiar color del boton segun tipo
         private void rbEntrada_CheckedChanged(object sender, EventArgs e)
         {
             if (rbEntrada.Checked)
             {
                 btnRegistrar.BackColor = System.Drawing.Color.LightGreen;
-                btnRegistrar.Text = " Registrar ENTRADA";
+                btnRegistrar.Text = "Registrar ENTRADA";
             }
         }
 
@@ -397,23 +305,25 @@ namespace Almacen_El_Dorado
             if (rbSalida.Checked)
             {
                 btnRegistrar.BackColor = System.Drawing.Color.LightCoral;
-                btnRegistrar.Text = " Registrar SALIDA";
+                btnRegistrar.Text = "Registrar SALIDA";
             }
         }
 
-        // ========== EVENTOS VACÍOS (no necesitan código) ==========
-        private void dgvMovimientos_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-        private void gbDatosMovimiento_Enter(object sender, EventArgs e) { }
-        private void lblStockActual_Click(object sender, EventArgs e) { }
-        private void nudCantidad_ValueChanged(object sender, EventArgs e) { }
-        private void gbTipoMovimiento_Enter(object sender, EventArgs e) { }
-        private void gbHistorial_Enter(object sender, EventArgs e) { }
-
+        // volver al menu principal
         private void btnVolver_Click(object sender, EventArgs e)
         {
             this.Close();
             FrmPrincipal principal = new FrmPrincipal();
             principal.Show();
         }
+
+        // eventos vacios
+        private void dgvMovimientos_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+        private void gbDatosMovimiento_Enter(object sender, EventArgs e) { }
+        private void lblStockActual_Click(object sender, EventArgs e) { }
+        private void nudCantidad_ValueChanged(object sender, EventArgs e) { }
+        private void gbTipoMovimiento_Enter(object sender, EventArgs e) { }
+        private void gbHistorial_Enter(object sender, EventArgs e) { }
+        private void FrmMovimientos_Load(object sender, EventArgs e) { }
     }
 }

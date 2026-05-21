@@ -1,57 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using Almacen_El_Dorado.Database;
+using System.Data.SqlClient;
 
 namespace Almacen_El_Dorado
 {
     public partial class FrmProveedores : Form
     {
-        // Lista de proveedores
-        List<Proveedor> listaProveedores = new List<Proveedor>();
-
-        // Variables para controlar edicion
+        // variables para controlar edicion
         bool editando = false;
         int idActual = 0;
 
-        // ========== CONSTRUCTOR ==========
         public FrmProveedores()
         {
             InitializeComponent();
-
-            // Configurar DataGridView
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new System.Drawing.Size(1100, 700);
             ConfigurarDataGridView();
-
-            // Cargar proveedores de ejemplo
-            CargarProveedoresEjemplo();
-
-            // Mostrar proveedores
-            MostrarProveedores();
+            CargarProveedores();
         }
 
-        // ========== CLASE PROVEEDOR ==========
-        class Proveedor
-        {
-            public int Id { get; set; }
-            public string Nombre { get; set; }
-            public string Telefono { get; set; }
-            public string Direccion { get; set; }
-            public string Contacto { get; set; }
-            public string Email { get; set; }
-        }
-
-        // ========== CONFIGURAR DATAGRIDVIEW ==========
+        // configurar el data grid view
         private void ConfigurarDataGridView()
         {
             dgvProveedores.Columns.Clear();
-
-            dgvProveedores.Columns.Add("Id", "ID");
+            dgvProveedores.Columns.Add("IdProveedor", "ID");
             dgvProveedores.Columns.Add("Nombre", "Nombre");
             dgvProveedores.Columns.Add("Telefono", "Telefono");
             dgvProveedores.Columns.Add("Direccion", "Direccion");
             dgvProveedores.Columns.Add("Contacto", "Contacto");
             dgvProveedores.Columns.Add("Email", "Email");
 
-            dgvProveedores.Columns["Id"].Width = 50;
+            dgvProveedores.Columns["IdProveedor"].Width = 50;
             dgvProveedores.Columns["Nombre"].Width = 150;
             dgvProveedores.Columns["Telefono"].Width = 100;
             dgvProveedores.Columns["Direccion"].Width = 150;
@@ -59,78 +39,62 @@ namespace Almacen_El_Dorado
             dgvProveedores.Columns["Email"].Width = 150;
 
             dgvProveedores.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProveedores.MultiSelect = false;
             dgvProveedores.AllowUserToAddRows = false;
+            dgvProveedores.CellClick += dgvProveedores_CellClick;
         }
 
-        // ========== CARGAR PROVEEDORES DE EJEMPLO ==========
-        private void CargarProveedoresEjemplo()
+        // metodo para cargar proveedores desde la base de datos
+        private void CargarProveedores(string filtro = "")
         {
-            listaProveedores.Clear();
-
-            listaProveedores.Add(new Proveedor
+            try
             {
-                Id = 1,
-                Nombre = "ElectroTech",
-                Telefono = "12345678",
-                Direccion = "Zona 1, Ciudad",
-                Contacto = "Juan Perez",
-                Email = "ventas@electrotech.com"
-            });
-
-            listaProveedores.Add(new Proveedor
-            {
-                Id = 2,
-                Nombre = "Moda Express",
-                Telefono = "87654321",
-                Direccion = "Zona 4, Ciudad",
-                Contacto = "Maria Lopez",
-                Email = "info@modaexpress.com"
-            });
-
-            listaProveedores.Add(new Proveedor
-            {
-                Id = 3,
-                Nombre = "Distribuidora de Alimentos",
-                Telefono = "55555555",
-                Direccion = "Zona 7, Ciudad",
-                Contacto = "Carlos Ruiz",
-                Email = "carlos@distalimentos.com"
-            });
-        }
-
-        // ========== MOSTRAR PROVEEDORES ==========
-        private void MostrarProveedores(string filtro = "")
-        {
-            dgvProveedores.Rows.Clear();
-
-            int fila = 0;
-            foreach (Proveedor p in listaProveedores)
-            {
-                // Aplicar filtro si existe
-                if (filtro != "")
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
-                    if (!p.Nombre.ToLower().Contains(filtro.ToLower()) &&
-                        !p.Telefono.Contains(filtro) &&
-                        !p.Contacto.ToLower().Contains(filtro.ToLower()))
+                    conn.Open();
+                    string query;
+
+                    if (filtro == "")
                     {
-                        continue;
+                        query = "SELECT IdProveedor, Nombre, Telefono, Direccion, Contacto, Email FROM Proveedores ORDER BY Nombre";
                     }
+                    else
+                    {
+                        // buscar por nombre o codigo (id)
+                        query = "SELECT IdProveedor, Nombre, Telefono, Direccion, Contacto, Email FROM Proveedores " +
+                                "WHERE Nombre LIKE @filtro OR CAST(IdProveedor AS VARCHAR) LIKE @filtro ORDER BY Nombre";
+                    }
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    if (filtro != "")
+                    {
+                        cmd.Parameters.AddWithValue("@filtro", "%" + filtro + "%");
+                    }
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    dgvProveedores.Rows.Clear();
+
+                    while (reader.Read())
+                    {
+                        dgvProveedores.Rows.Add(
+                            reader["IdProveedor"].ToString(),
+                            reader["Nombre"].ToString(),
+                            reader["Telefono"].ToString(),
+                            reader["Direccion"].ToString(),
+                            reader["Contacto"].ToString(),
+                            reader["Email"].ToString()
+                        );
+                    }
+                    reader.Close();
                 }
-
-                dgvProveedores.Rows.Add();
-                dgvProveedores.Rows[fila].Cells[0].Value = p.Id;
-                dgvProveedores.Rows[fila].Cells[1].Value = p.Nombre;
-                dgvProveedores.Rows[fila].Cells[2].Value = p.Telefono;
-                dgvProveedores.Rows[fila].Cells[3].Value = p.Direccion;
-                dgvProveedores.Rows[fila].Cells[4].Value = p.Contacto;
-                dgvProveedores.Rows[fila].Cells[5].Value = p.Email;
-
-                fila++;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar proveedores: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // ========== LIMPIAR CAMPOS ==========
+        // limpiar campos del formulario
         private void LimpiarCampos()
         {
             txtNombre.Text = "";
@@ -138,14 +102,12 @@ namespace Almacen_El_Dorado
             txtDireccion.Text = "";
             txtContacto.Text = "";
             txtEmail.Text = "";
-
             editando = false;
             idActual = 0;
-
             txtNombre.Focus();
         }
 
-        // ========== VALIDAR CAMPOS ==========
+        // validar campos obligatorios
         private bool ValidarCampos()
         {
             if (txtNombre.Text == "")
@@ -155,73 +117,76 @@ namespace Almacen_El_Dorado
                 txtNombre.Focus();
                 return false;
             }
-
             return true;
         }
 
-        // ========== BOTON NUEVO ==========
+        // boton nuevo
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
             dgvProveedores.ClearSelection();
         }
 
-        // ========== BOTON GUARDAR ==========
+        // boton guardar
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (!ValidarCampos())
-                return;
+            if (!ValidarCampos()) return;
 
-            if (!editando)
+            try
             {
-                // Agregar nuevo proveedor
-                int nuevoId = 1;
-                if (listaProveedores.Count > 0)
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
-                    nuevoId = listaProveedores[listaProveedores.Count - 1].Id + 1;
-                }
+                    conn.Open();
 
-                Proveedor nuevo = new Proveedor();
-                nuevo.Id = nuevoId;
-                nuevo.Nombre = txtNombre.Text;
-                nuevo.Telefono = txtTelefono.Text;
-                nuevo.Direccion = txtDireccion.Text;
-                nuevo.Contacto = txtContacto.Text;
-                nuevo.Email = txtEmail.Text;
-
-                listaProveedores.Add(nuevo);
-
-                MessageBox.Show("Proveedor guardado correctamente", "Exito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                // Editar proveedor existente
-                for (int i = 0; i < listaProveedores.Count; i++)
-                {
-                    if (listaProveedores[i].Id == idActual)
+                    if (!editando)
                     {
-                        listaProveedores[i].Nombre = txtNombre.Text;
-                        listaProveedores[i].Telefono = txtTelefono.Text;
-                        listaProveedores[i].Direccion = txtDireccion.Text;
-                        listaProveedores[i].Contacto = txtContacto.Text;
-                        listaProveedores[i].Email = txtEmail.Text;
-                        break;
+                        // insertar nuevo proveedor
+                        string query = "INSERT INTO Proveedores (Nombre, Telefono, Direccion, Contacto, Email) " +
+                                       "VALUES (@nombre, @telefono, @direccion, @contacto, @email)";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@nombre", txtNombre.Text);
+                        cmd.Parameters.AddWithValue("@telefono", txtTelefono.Text);
+                        cmd.Parameters.AddWithValue("@direccion", txtDireccion.Text);
+                        cmd.Parameters.AddWithValue("@contacto", txtContacto.Text);
+                        cmd.Parameters.AddWithValue("@email", txtEmail.Text);
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Proveedor guardado correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        // actualizar proveedor existente
+                        string query = "UPDATE Proveedores SET Nombre=@nombre, Telefono=@telefono, " +
+                                       "Direccion=@direccion, Contacto=@contacto, Email=@email " +
+                                       "WHERE IdProveedor=@id";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@id", idActual);
+                        cmd.Parameters.AddWithValue("@nombre", txtNombre.Text);
+                        cmd.Parameters.AddWithValue("@telefono", txtTelefono.Text);
+                        cmd.Parameters.AddWithValue("@direccion", txtDireccion.Text);
+                        cmd.Parameters.AddWithValue("@contacto", txtContacto.Text);
+                        cmd.Parameters.AddWithValue("@email", txtEmail.Text);
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Proveedor actualizado correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        editando = false;
+                        idActual = 0;
                     }
                 }
 
-                MessageBox.Show("Proveedor actualizado correctamente", "Exito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                editando = false;
-                idActual = 0;
+                CargarProveedores();
+                LimpiarCampos();
             }
-
-            MostrarProveedores();
-            LimpiarCampos();
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al guardar proveedor: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        // ========== BOTON EDITAR ==========
+        // boton editar
         private void btnEditar_Click(object sender, EventArgs e)
         {
             if (dgvProveedores.SelectedRows.Count == 0)
@@ -231,28 +196,18 @@ namespace Almacen_El_Dorado
                 return;
             }
 
-            int id = Convert.ToInt32(dgvProveedores.SelectedRows[0].Cells[0].Value);
+            idActual = Convert.ToInt32(dgvProveedores.SelectedRows[0].Cells[0].Value);
+            txtNombre.Text = dgvProveedores.SelectedRows[0].Cells[1].Value.ToString();
+            txtTelefono.Text = dgvProveedores.SelectedRows[0].Cells[2].Value.ToString();
+            txtDireccion.Text = dgvProveedores.SelectedRows[0].Cells[3].Value.ToString();
+            txtContacto.Text = dgvProveedores.SelectedRows[0].Cells[4].Value.ToString();
+            txtEmail.Text = dgvProveedores.SelectedRows[0].Cells[5].Value.ToString();
 
-            foreach (Proveedor p in listaProveedores)
-            {
-                if (p.Id == id)
-                {
-                    txtNombre.Text = p.Nombre;
-                    txtTelefono.Text = p.Telefono;
-                    txtDireccion.Text = p.Direccion;
-                    txtContacto.Text = p.Contacto;
-                    txtEmail.Text = p.Email;
-
-                    editando = true;
-                    idActual = p.Id;
-                    break;
-                }
-            }
-
+            editando = true;
             txtNombre.Focus();
         }
 
-        // ========== BOTON ELIMINAR ==========
+        // boton eliminar
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             if (dgvProveedores.SelectedRows.Count == 0)
@@ -262,64 +217,63 @@ namespace Almacen_El_Dorado
                 return;
             }
 
-            string nombreProveedor = dgvProveedores.SelectedRows[0].Cells[1].Value.ToString();
+            int id = Convert.ToInt32(dgvProveedores.SelectedRows[0].Cells[0].Value);
+            string nombre = dgvProveedores.SelectedRows[0].Cells[1].Value.ToString();
 
-            DialogResult respuesta = MessageBox.Show("Esta seguro de eliminar al proveedor:\n\n" +
-                nombreProveedor + "\n\nEsta accion no se puede deshacer.",
-                "Confirmar eliminacion",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            DialogResult respuesta = MessageBox.Show("Esta seguro de eliminar al proveedor: " + nombre,
+                "Confirmar eliminacion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (respuesta == DialogResult.Yes)
             {
-                int id = Convert.ToInt32(dgvProveedores.SelectedRows[0].Cells[0].Value);
-
-                Proveedor eliminar = null;
-                foreach (Proveedor p in listaProveedores)
+                try
                 {
-                    if (p.Id == id)
+                    using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                     {
-                        eliminar = p;
-                        break;
+                        conn.Open();
+                        string query = "DELETE FROM Proveedores WHERE IdProveedor = @id";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.ExecuteNonQuery();
+
+                        MessageBox.Show("Proveedor eliminado correctamente", "Exito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        CargarProveedores();
+                        LimpiarCampos();
                     }
                 }
-
-                if (eliminar != null)
+                catch (Exception ex)
                 {
-                    listaProveedores.Remove(eliminar);
-                    MessageBox.Show("Proveedor eliminado correctamente", "Exito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    MostrarProveedores();
-                    LimpiarCampos();
+                    MessageBox.Show("Error al eliminar proveedor: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        // ========== BOTON LIMPIAR ==========
+        // boton limpiar
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
-            MostrarProveedores();
+            CargarProveedores();
             txtBuscar.Text = "";
             dgvProveedores.ClearSelection();
         }
 
-        // ========== BOTON BUSCAR ==========
+        // boton buscar (busca por nombre o codigo/id)
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             string textoBuscar = txtBuscar.Text.Trim();
             if (textoBuscar == "")
             {
-                MostrarProveedores();
+                CargarProveedores();
             }
             else
             {
-                MostrarProveedores(textoBuscar);
+                CargarProveedores(textoBuscar);
             }
         }
 
-        // ========== BUSCAR CON ENTER ==========
+        // buscar con enter
         private void txtBuscar_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -328,7 +282,7 @@ namespace Almacen_El_Dorado
             }
         }
 
-        // ========== CLICK EN DATAGRIDVIEW ==========
+        // click en data grid view
         private void dgvProveedores_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -337,7 +291,15 @@ namespace Almacen_El_Dorado
             }
         }
 
-        // ========== EVENTOS VACIOS (no necesitan codigo) ==========
+        // volver al menu principal
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            FrmPrincipal principal = new FrmPrincipal();
+            principal.Show();
+        }
+
+        // eventos vacios
         private void lblTelefono_Click(object sender, EventArgs e) { }
         private void txtBuscar_TextChanged(object sender, EventArgs e) { }
         private void dgvProveedores_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
@@ -347,12 +309,6 @@ namespace Almacen_El_Dorado
         private void txtContacto_TextChanged(object sender, EventArgs e) { }
         private void txtEmail_TextChanged(object sender, EventArgs e) { }
         private void gbDatosProveedor_Enter(object sender, EventArgs e) { }
-
-        private void btnVolver_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            FrmPrincipal principal = new FrmPrincipal();
-            principal.Show();
-        }
+        private void FrmProveedores_Load(object sender, EventArgs e) { }
     }
 }

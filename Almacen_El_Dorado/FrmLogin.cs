@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using Almacen_El_Dorado.Database;
+using System.Data.SqlClient;
 
 namespace Almacen_El_Dorado
 {
@@ -9,78 +11,103 @@ namespace Almacen_El_Dorado
         {
             InitializeComponent();
 
-            // Configurar la contraseña para que muestre *
+            // configurar la contraseña para que muestre asteriscos
             txtPassword.PasswordChar = '*';
 
-            // Ocultar mensaje de error al inicio
+            // ocultar mensaje de error al inicio
             lblError.Text = "";
         }
 
+        // evento cuando el usuario cambia el texto
         private void txtUsuario_TextChanged(object sender, EventArgs e)
         {
-            // Limpiar mensaje de error cuando el usuario empieza a escribir
+            // limpiar mensaje de error cuando el usuario empieza a escribir
             lblError.Text = "";
         }
 
+        // evento cuando la contraseña cambia
         private void txtPassword_TextChanged(object sender, EventArgs e)
         {
-            // Limpiar mensaje de error cuando escribe la contraseña
+            // limpiar mensaje de error cuando escribe la contraseña
             lblError.Text = "";
         }
 
+        // evento del boton iniciar sesion
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // Usuario y contraseña correctos
-            string usuarioCorrecto = "admin";
-            string passwordCorrecto = "1234";
+            // credenciales profesionales
+            string usuarioCorrecto = "AdminSistema";
+            string passwordCorrecto = "Inventario2024";
 
-            // Verificar si el usuario y contraseña son correctos
+            // verificar si el usuario y contraseña son correctos
             if (txtUsuario.Text == usuarioCorrecto && txtPassword.Text == passwordCorrecto)
             {
-                // Abrir el formulario principal
+                // abrir el formulario principal
                 FrmPrincipal principal = new FrmPrincipal();
                 principal.Show();
 
-                // Ocultar el login
+                // ocultar el login
                 this.Hide();
             }
             else
             {
-                // Mostrar mensaje de error
-                lblError.Text = "❌ Usuario o contraseña incorrectos";
+                // mostrar mensaje de error
+                lblError.Text = "Usuario o contraseña incorrectos";
                 lblError.ForeColor = System.Drawing.Color.Red;
 
-                // Limpiar los campos
+                // limpiar los campos
                 txtUsuario.Text = "";
                 txtPassword.Text = "";
 
-                // Poner el foco en el campo usuario
+                // poner el foco en el campo usuario
                 txtUsuario.Focus();
             }
         }
 
+        // evento del boton salir
         private void btnSalir_Click(object sender, EventArgs e)
         {
-            // Preguntar si realmente quiere salir
-            DialogResult respuesta = MessageBox.Show("¿Está seguro de salir?",
+            // preguntar si realmente quiere salir
+            DialogResult respuesta = MessageBox.Show("Desea salir del sistema?",
                 "Confirmar salida",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
             if (respuesta == DialogResult.Yes)
             {
-                // Cerrar toda la aplicación
+                // cerrar toda la aplicacion
                 Application.Exit();
             }
         }
 
+        // evento cuando el formulario se carga
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-            // Centrar el formulario en la pantalla
+            // centrar el formulario en la pantalla
             this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Poner el foco en el campo usuario
+            // poner el foco en el campo usuario
             txtUsuario.Focus();
+        }
+
+        // boton para probar conexion (opcional)
+        private void btnProbarConexion_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
+                {
+                    conn.Open();
+                    MessageBox.Show("Conexion exitosa a la base de datos!", "Exito",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error de conexion: " + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

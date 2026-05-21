@@ -225,6 +225,7 @@
             this.Controls.Add(this.gbTipoMovimiento);
             this.Name = "FrmMovimientos";
             this.Text = "FrmMovimientos";
+            this.Load += new System.EventHandler(this.FrmMovimientos_Load);
             this.gbTipoMovimiento.ResumeLayout(false);
             this.gbTipoMovimiento.PerformLayout();
             this.gbDatosMovimiento.ResumeLayout(false);

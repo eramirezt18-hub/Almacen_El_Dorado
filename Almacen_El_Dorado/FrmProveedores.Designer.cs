@@ -275,6 +275,7 @@
             this.Controls.Add(this.gbDatosProveedor);
             this.Name = "FrmProveedores";
             this.Text = "FrmProveedores";
+            this.Load += new System.EventHandler(this.FrmProveedores_Load);
             this.gbDatosProveedor.ResumeLayout(false);
             this.gbDatosProveedor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProveedores)).EndInit();
