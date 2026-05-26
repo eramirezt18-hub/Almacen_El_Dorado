@@ -218,5 +218,10 @@ namespace Almacen_El_Dorado
         private void lblStockBajo_Click(object sender, EventArgs e) { }
         private void lblCategorias_Click(object sender, EventArgs e) { }
         private void FrmConsultas_Load(object sender, EventArgs e) { }
+
+        private void FrmConsultas_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

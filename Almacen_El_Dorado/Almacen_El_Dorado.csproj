@@ -46,71 +46,71 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\Conexion.cs" />
-    <Compile Include="Database\DataBaseHelper.cs" />
-    <Compile Include="FrmCategorias.cs">
+    <Compile Include="backend\Conexion.cs" />
+    <Compile Include="backend\DataBaseHelper.cs" />
+    <Compile Include="fronted\FrmCategorias.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmCategorias.Designer.cs">
+    <Compile Include="fronted\FrmCategorias.Designer.cs">
       <DependentUpon>FrmCategorias.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmConsultas.cs">
+    <Compile Include="fronted\FrmConsultas.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmConsultas.Designer.cs">
+    <Compile Include="fronted\FrmConsultas.Designer.cs">
       <DependentUpon>FrmConsultas.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmLogin.cs">
+    <Compile Include="fronted\FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmLogin.Designer.cs">
+    <Compile Include="fronted\FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMovimientos.cs">
+    <Compile Include="fronted\FrmMovimientos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmMovimientos.Designer.cs">
+    <Compile Include="fronted\FrmMovimientos.Designer.cs">
       <DependentUpon>FrmMovimientos.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmPrincipal.cs">
+    <Compile Include="fronted\FrmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmPrincipal.Designer.cs">
+    <Compile Include="fronted\FrmPrincipal.Designer.cs">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmProductos.cs">
+    <Compile Include="fronted\FrmProductos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmProductos.Designer.cs">
+    <Compile Include="fronted\FrmProductos.Designer.cs">
       <DependentUpon>FrmProductos.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmProveedores.cs">
+    <Compile Include="fronted\FrmProveedores.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmProveedores.Designer.cs">
+    <Compile Include="fronted\FrmProveedores.Designer.cs">
       <DependentUpon>FrmProveedores.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmCategorias.resx">
+    <EmbeddedResource Include="fronted\FrmCategorias.resx">
       <DependentUpon>FrmCategorias.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmConsultas.resx">
+    <EmbeddedResource Include="fronted\FrmConsultas.resx">
       <DependentUpon>FrmConsultas.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmLogin.resx">
+    <EmbeddedResource Include="fronted\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmMovimientos.resx">
+    <EmbeddedResource Include="fronted\FrmMovimientos.resx">
       <DependentUpon>FrmMovimientos.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmPrincipal.resx">
+    <EmbeddedResource Include="fronted\FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmProductos.resx">
+    <EmbeddedResource Include="fronted\FrmProductos.resx">
       <DependentUpon>FrmProductos.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmProveedores.resx">
+    <EmbeddedResource Include="fronted\FrmProveedores.resx">
       <DependentUpon>FrmProveedores.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -137,11 +137,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="Resources\Gemini_Generated_Image_fdn3unfdn3unfdn3.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\logoalmacen20052026jpeg.jpeg" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="docs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="database\script_creacion_bd.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

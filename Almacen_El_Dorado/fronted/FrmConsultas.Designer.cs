@@ -29,20 +29,20 @@
         private void InitializeComponent()
         {
             this.gbFiltros = new System.Windows.Forms.GroupBox();
-            this.lblBuscar = new System.Windows.Forms.Label();
-            this.txtBuscar = new System.Windows.Forms.TextBox();
-            this.btnBuscar = new System.Windows.Forms.Button();
-            this.btnLimpiar = new System.Windows.Forms.Button();
-            this.rbNombre = new System.Windows.Forms.RadioButton();
-            this.rbCodigo = new System.Windows.Forms.RadioButton();
-            this.rbCategoria = new System.Windows.Forms.RadioButton();
-            this.gbResumen = new System.Windows.Forms.GroupBox();
-            this.lblTotalProductos = new System.Windows.Forms.Label();
-            this.lblValorTotal = new System.Windows.Forms.Label();
-            this.lblStockBajo = new System.Windows.Forms.Label();
-            this.lblCategorias = new System.Windows.Forms.Label();
-            this.dgvConsultas = new System.Windows.Forms.DataGridView();
             this.btnVolver = new System.Windows.Forms.Button();
+            this.rbCategoria = new System.Windows.Forms.RadioButton();
+            this.rbCodigo = new System.Windows.Forms.RadioButton();
+            this.rbNombre = new System.Windows.Forms.RadioButton();
+            this.btnLimpiar = new System.Windows.Forms.Button();
+            this.btnBuscar = new System.Windows.Forms.Button();
+            this.txtBuscar = new System.Windows.Forms.TextBox();
+            this.lblBuscar = new System.Windows.Forms.Label();
+            this.gbResumen = new System.Windows.Forms.GroupBox();
+            this.lblCategorias = new System.Windows.Forms.Label();
+            this.lblStockBajo = new System.Windows.Forms.Label();
+            this.lblValorTotal = new System.Windows.Forms.Label();
+            this.lblTotalProductos = new System.Windows.Forms.Label();
+            this.dgvConsultas = new System.Windows.Forms.DataGridView();
             this.gbFiltros.SuspendLayout();
             this.gbResumen.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConsultas)).BeginInit();
@@ -66,54 +66,27 @@
             this.gbFiltros.Text = "Filtros de Busqueda";
             this.gbFiltros.Enter += new System.EventHandler(this.gbFiltros_Enter);
             // 
-            // lblBuscar
+            // btnVolver
             // 
-            this.lblBuscar.AutoSize = true;
-            this.lblBuscar.Location = new System.Drawing.Point(6, 27);
-            this.lblBuscar.Name = "lblBuscar";
-            this.lblBuscar.Size = new System.Drawing.Size(49, 16);
-            this.lblBuscar.TabIndex = 0;
-            this.lblBuscar.Text = "Buscar";
+            this.btnVolver.Location = new System.Drawing.Point(760, 18);
+            this.btnVolver.Name = "btnVolver";
+            this.btnVolver.Size = new System.Drawing.Size(82, 27);
+            this.btnVolver.TabIndex = 7;
+            this.btnVolver.Text = "Volver";
+            this.btnVolver.UseVisualStyleBackColor = true;
+            this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             // 
-            // txtBuscar
+            // rbCategoria
             // 
-            this.txtBuscar.Location = new System.Drawing.Point(75, 23);
-            this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(185, 22);
-            this.txtBuscar.TabIndex = 1;
-            this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
-            // 
-            // btnBuscar
-            // 
-            this.btnBuscar.Location = new System.Drawing.Point(301, 27);
-            this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(75, 23);
-            this.btnBuscar.TabIndex = 2;
-            this.btnBuscar.Text = "Buscar";
-            this.btnBuscar.UseVisualStyleBackColor = true;
-            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
-            // 
-            // btnLimpiar
-            // 
-            this.btnLimpiar.Location = new System.Drawing.Point(425, 27);
-            this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(149, 23);
-            this.btnLimpiar.TabIndex = 3;
-            this.btnLimpiar.Text = "Limpiar filtros";
-            this.btnLimpiar.UseVisualStyleBackColor = true;
-            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
-            // 
-            // rbNombre
-            // 
-            this.rbNombre.AutoSize = true;
-            this.rbNombre.Location = new System.Drawing.Point(134, 75);
-            this.rbNombre.Name = "rbNombre";
-            this.rbNombre.Size = new System.Drawing.Size(77, 20);
-            this.rbNombre.TabIndex = 4;
-            this.rbNombre.TabStop = true;
-            this.rbNombre.Text = "Nombre";
-            this.rbNombre.UseVisualStyleBackColor = true;
-            this.rbNombre.CheckedChanged += new System.EventHandler(this.rbNombre_CheckedChanged);
+            this.rbCategoria.AutoSize = true;
+            this.rbCategoria.Location = new System.Drawing.Point(270, 75);
+            this.rbCategoria.Name = "rbCategoria";
+            this.rbCategoria.Size = new System.Drawing.Size(87, 20);
+            this.rbCategoria.TabIndex = 6;
+            this.rbCategoria.TabStop = true;
+            this.rbCategoria.Text = "Categoria";
+            this.rbCategoria.UseVisualStyleBackColor = true;
+            this.rbCategoria.CheckedChanged += new System.EventHandler(this.rbCategoria_CheckedChanged);
             // 
             // rbCodigo
             // 
@@ -127,17 +100,54 @@
             this.rbCodigo.UseVisualStyleBackColor = true;
             this.rbCodigo.CheckedChanged += new System.EventHandler(this.rbCodigo_CheckedChanged);
             // 
-            // rbCategoria
+            // rbNombre
             // 
-            this.rbCategoria.AutoSize = true;
-            this.rbCategoria.Location = new System.Drawing.Point(270, 75);
-            this.rbCategoria.Name = "rbCategoria";
-            this.rbCategoria.Size = new System.Drawing.Size(87, 20);
-            this.rbCategoria.TabIndex = 6;
-            this.rbCategoria.TabStop = true;
-            this.rbCategoria.Text = "Categoria";
-            this.rbCategoria.UseVisualStyleBackColor = true;
-            this.rbCategoria.CheckedChanged += new System.EventHandler(this.rbCategoria_CheckedChanged);
+            this.rbNombre.AutoSize = true;
+            this.rbNombre.Location = new System.Drawing.Point(134, 75);
+            this.rbNombre.Name = "rbNombre";
+            this.rbNombre.Size = new System.Drawing.Size(77, 20);
+            this.rbNombre.TabIndex = 4;
+            this.rbNombre.TabStop = true;
+            this.rbNombre.Text = "Nombre";
+            this.rbNombre.UseVisualStyleBackColor = true;
+            this.rbNombre.CheckedChanged += new System.EventHandler(this.rbNombre_CheckedChanged);
+            // 
+            // btnLimpiar
+            // 
+            this.btnLimpiar.Location = new System.Drawing.Point(425, 27);
+            this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Size = new System.Drawing.Size(149, 23);
+            this.btnLimpiar.TabIndex = 3;
+            this.btnLimpiar.Text = "Limpiar filtros";
+            this.btnLimpiar.UseVisualStyleBackColor = true;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
+            // 
+            // btnBuscar
+            // 
+            this.btnBuscar.Location = new System.Drawing.Point(301, 27);
+            this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Size = new System.Drawing.Size(75, 23);
+            this.btnBuscar.TabIndex = 2;
+            this.btnBuscar.Text = "Buscar";
+            this.btnBuscar.UseVisualStyleBackColor = true;
+            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
+            // 
+            // txtBuscar
+            // 
+            this.txtBuscar.Location = new System.Drawing.Point(75, 23);
+            this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.Size = new System.Drawing.Size(185, 22);
+            this.txtBuscar.TabIndex = 1;
+            this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
+            // 
+            // lblBuscar
+            // 
+            this.lblBuscar.AutoSize = true;
+            this.lblBuscar.Location = new System.Drawing.Point(6, 27);
+            this.lblBuscar.Name = "lblBuscar";
+            this.lblBuscar.Size = new System.Drawing.Size(49, 16);
+            this.lblBuscar.TabIndex = 0;
+            this.lblBuscar.Text = "Buscar";
             // 
             // gbResumen
             // 
@@ -153,25 +163,15 @@
             this.gbResumen.Text = "Resumen Inventario";
             this.gbResumen.Enter += new System.EventHandler(this.gbResumen_Enter);
             // 
-            // lblTotalProductos
+            // lblCategorias
             // 
-            this.lblTotalProductos.AutoSize = true;
-            this.lblTotalProductos.Location = new System.Drawing.Point(21, 35);
-            this.lblTotalProductos.Name = "lblTotalProductos";
-            this.lblTotalProductos.Size = new System.Drawing.Size(115, 16);
-            this.lblTotalProductos.TabIndex = 0;
-            this.lblTotalProductos.Text = "Total Productos: 0";
-            this.lblTotalProductos.Click += new System.EventHandler(this.lblTotalProductos_Click);
-            // 
-            // lblValorTotal
-            // 
-            this.lblValorTotal.AutoSize = true;
-            this.lblValorTotal.Location = new System.Drawing.Point(210, 35);
-            this.lblValorTotal.Name = "lblValorTotal";
-            this.lblValorTotal.Size = new System.Drawing.Size(119, 16);
-            this.lblValorTotal.TabIndex = 1;
-            this.lblValorTotal.Text = "Valor Total: Q. 0.00";
-            this.lblValorTotal.Click += new System.EventHandler(this.lblValorTotal_Click);
+            this.lblCategorias.AutoSize = true;
+            this.lblCategorias.Location = new System.Drawing.Point(584, 35);
+            this.lblCategorias.Name = "lblCategorias";
+            this.lblCategorias.Size = new System.Drawing.Size(86, 16);
+            this.lblCategorias.TabIndex = 3;
+            this.lblCategorias.Text = "Categorias: 0";
+            this.lblCategorias.Click += new System.EventHandler(this.lblCategorias_Click);
             // 
             // lblStockBajo
             // 
@@ -183,15 +183,25 @@
             this.lblStockBajo.Text = "Stock Bajo(<=5): 0";
             this.lblStockBajo.Click += new System.EventHandler(this.lblStockBajo_Click);
             // 
-            // lblCategorias
+            // lblValorTotal
             // 
-            this.lblCategorias.AutoSize = true;
-            this.lblCategorias.Location = new System.Drawing.Point(584, 35);
-            this.lblCategorias.Name = "lblCategorias";
-            this.lblCategorias.Size = new System.Drawing.Size(86, 16);
-            this.lblCategorias.TabIndex = 3;
-            this.lblCategorias.Text = "Categorias: 0";
-            this.lblCategorias.Click += new System.EventHandler(this.lblCategorias_Click);
+            this.lblValorTotal.AutoSize = true;
+            this.lblValorTotal.Location = new System.Drawing.Point(210, 35);
+            this.lblValorTotal.Name = "lblValorTotal";
+            this.lblValorTotal.Size = new System.Drawing.Size(119, 16);
+            this.lblValorTotal.TabIndex = 1;
+            this.lblValorTotal.Text = "Valor Total: Q. 0.00";
+            this.lblValorTotal.Click += new System.EventHandler(this.lblValorTotal_Click);
+            // 
+            // lblTotalProductos
+            // 
+            this.lblTotalProductos.AutoSize = true;
+            this.lblTotalProductos.Location = new System.Drawing.Point(21, 35);
+            this.lblTotalProductos.Name = "lblTotalProductos";
+            this.lblTotalProductos.Size = new System.Drawing.Size(115, 16);
+            this.lblTotalProductos.TabIndex = 0;
+            this.lblTotalProductos.Text = "Total Productos: 0";
+            this.lblTotalProductos.Click += new System.EventHandler(this.lblTotalProductos_Click);
             // 
             // dgvConsultas
             // 
@@ -204,16 +214,6 @@
             this.dgvConsultas.TabIndex = 2;
             this.dgvConsultas.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvConsultas_CellContentClick);
             // 
-            // btnVolver
-            // 
-            this.btnVolver.Location = new System.Drawing.Point(760, 18);
-            this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(82, 27);
-            this.btnVolver.TabIndex = 7;
-            this.btnVolver.Text = "Volver";
-            this.btnVolver.UseVisualStyleBackColor = true;
-            this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
-            // 
             // FrmConsultas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -224,6 +224,7 @@
             this.Controls.Add(this.gbFiltros);
             this.Name = "FrmConsultas";
             this.Text = "FrmConsultas";
+            this.Load += new System.EventHandler(this.FrmConsultas_Load_1);
             this.gbFiltros.ResumeLayout(false);
             this.gbFiltros.PerformLayout();
             this.gbResumen.ResumeLayout(false);
