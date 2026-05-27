@@ -16,8 +16,8 @@ Permite administrar productos, categorías, proveedores y controlar entradas/sal
 - ADO.NET para conexión a BD
 
 ## Requisitos del sistema
-- Windows 7 o superior
-- SQL Server Express o superior
+- Windows 7
+- SQL Server Express
 - .NET Framework 4.8
 
 ## Instrucciones de ejecución
@@ -36,3 +36,10 @@ Permite administrar productos, categorías, proveedores y controlar entradas/sal
 - Historial de movimientos
 
 ## Estructura del proyecto
+
+Proyecto_Inventario
+ |--/backend -> Lógica de negocio y conexión a BD
+ |--/frontend -> Formularios de interfaz de usuario
+ |--/database -> Scripts SQL
+ |--/docs -> Documentación
+ |--README.md
