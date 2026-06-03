@@ -109,5 +109,15 @@ namespace Almacen_El_Dorado
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void lblUsuario_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnContraseña_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

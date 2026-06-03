@@ -14,7 +14,9 @@ namespace Almacen_El_Dorado
         public FrmProveedores()
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
+            //this.StartPosition = FormStartPosition.CenterScreen;
+            this.WindowState = FormWindowState.Maximized;
+
             this.Size = new System.Drawing.Size(1100, 700);
             ConfigurarDataGridView();
             CargarProveedores();
@@ -55,7 +57,7 @@ namespace Almacen_El_Dorado
 
                     if (filtro == "")
                     {
-                        query = "SELECT IdProveedor, Nombre, Telefono, Direccion, Contacto, Email FROM Proveedores ORDER BY Nombre";
+                        query = "SELECT IdProveedor, Nombre, Telefono, Direccion, Contacto, Email FROM Proveedores ORDER BY IdProveedor";
                     }
                     else
                     {

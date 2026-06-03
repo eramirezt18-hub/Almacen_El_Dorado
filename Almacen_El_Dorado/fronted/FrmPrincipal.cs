@@ -12,9 +12,9 @@ namespace Almacen_El_Dorado
         {
             InitializeComponent();
 
-            // configurar ventana normal (no maximizada)
-            this.WindowState = FormWindowState.Normal;
-            this.StartPosition = FormStartPosition.CenterScreen;
+            // configurar ventana normal
+
+            this.WindowState = FormWindowState.Maximized;
             this.Size = new System.Drawing.Size(1024, 768);
 
             // mostrar usuario en barra de estado
@@ -66,8 +66,8 @@ namespace Almacen_El_Dorado
         private void AbrirFormulario(Form formulario)
         {
             formulario.StartPosition = FormStartPosition.CenterScreen;
-            formulario.WindowState = FormWindowState.Normal;
-            formulario.Size = new System.Drawing.Size(1024, 768);
+            formulario.WindowState = FormWindowState.Maximized;
+            //formulario.Size = new System.Drawing.Size(1024, 768);
             formulario.Show();
             this.Hide();
         }

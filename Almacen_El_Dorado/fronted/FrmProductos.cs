@@ -15,8 +15,10 @@ namespace Almacen_El_Dorado
         public FrmProductos()
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new System.Drawing.Size(1100, 700);
+            
+            this.WindowState = FormWindowState.Maximized;
+
+      
             ConfigurarDataGridView();
             CargarCategorias();
             CargarProductos();

@@ -148,6 +148,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="database\script_creacion_bd.sql" />
+    <None Include="Resources\buscar.png" />
+    <None Include="Resources\VolverN1.png" />
+    <None Include="Resources\FondoFormsN1.png" />
+    <None Include="Resources\AyudaN1.png" />
+    <None Include="Resources\consultanN1.png" />
+    <None Include="Resources\SalidaN1.png" />
+    <None Include="Resources\tienda-online.png" />
+    <None Include="Resources\ProveedorN1.png" />
+    <None Include="Resources\categorizacion.png" />
+    <None Include="Resources\ProductosN1.png" />
+    <None Include="Resources\SalirN1.png" />
+    <None Include="Resources\FondoPrincipal.jpeg" />
+    <None Include="Resources\LogoAlmaN2w.png" />
+    <None Include="Resources\fondodesert1.png" />
+    <None Include="Resources\ContraseñaN1.png" />
+    <None Include="Resources\fondodesert.png" />
+    <None Include="Resources\usuarioN1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

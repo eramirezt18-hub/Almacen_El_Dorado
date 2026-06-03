@@ -10,8 +10,8 @@ namespace Almacen_El_Dorado
         public FrmCategorias()
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new System.Drawing.Size(500, 450);
+            this.WindowState = FormWindowState.Maximized;
+          
             CargarCategorias();
         }
 
@@ -23,7 +23,7 @@ namespace Almacen_El_Dorado
                 using (SqlConnection conn = new SqlConnection(DatabaseHelper.ConnectionString))
                 {
                     conn.Open();
-                    string query = "SELECT IdCategoria, Nombre FROM Categorias ORDER BY Nombre";
+                    string query = "SELECT IdCategoria, Nombre FROM Categorias ORDER BY IdCategoria";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     SqlDataReader reader = cmd.ExecuteReader();
 

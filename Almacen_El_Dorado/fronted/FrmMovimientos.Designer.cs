@@ -51,11 +51,13 @@
             // 
             // gbTipoMovimiento
             // 
+            this.gbTipoMovimiento.BackColor = System.Drawing.Color.Transparent;
             this.gbTipoMovimiento.Controls.Add(this.rbSalida);
             this.gbTipoMovimiento.Controls.Add(this.rbEntrada);
-            this.gbTipoMovimiento.Location = new System.Drawing.Point(12, 45);
+            this.gbTipoMovimiento.Font = new System.Drawing.Font("Monotype Corsiva", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbTipoMovimiento.Location = new System.Drawing.Point(12, 9);
             this.gbTipoMovimiento.Name = "gbTipoMovimiento";
-            this.gbTipoMovimiento.Size = new System.Drawing.Size(198, 117);
+            this.gbTipoMovimiento.Size = new System.Drawing.Size(219, 144);
             this.gbTipoMovimiento.TabIndex = 0;
             this.gbTipoMovimiento.TabStop = false;
             this.gbTipoMovimiento.Text = "Tipo de MOvimiento";
@@ -64,29 +66,37 @@
             // rbSalida
             // 
             this.rbSalida.AutoSize = true;
-            this.rbSalida.Location = new System.Drawing.Point(21, 83);
+            this.rbSalida.BackColor = System.Drawing.Color.LemonChiffon;
+            this.rbSalida.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.rbSalida.Font = new System.Drawing.Font("Monotype Corsiva", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbSalida.Location = new System.Drawing.Point(6, 87);
             this.rbSalida.Name = "rbSalida";
-            this.rbSalida.Size = new System.Drawing.Size(67, 20);
+            this.rbSalida.Size = new System.Drawing.Size(105, 38);
             this.rbSalida.TabIndex = 1;
             this.rbSalida.TabStop = true;
             this.rbSalida.Text = "Salida";
-            this.rbSalida.UseVisualStyleBackColor = true;
+            this.rbSalida.UseVisualStyleBackColor = false;
             this.rbSalida.CheckedChanged += new System.EventHandler(this.rbSalida_CheckedChanged);
             // 
             // rbEntrada
             // 
             this.rbEntrada.AutoSize = true;
-            this.rbEntrada.Location = new System.Drawing.Point(21, 44);
+            this.rbEntrada.BackColor = System.Drawing.Color.LemonChiffon;
+            this.rbEntrada.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.rbEntrada.Font = new System.Drawing.Font("Monotype Corsiva", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbEntrada.Location = new System.Drawing.Point(6, 33);
             this.rbEntrada.Name = "rbEntrada";
-            this.rbEntrada.Size = new System.Drawing.Size(75, 20);
+            this.rbEntrada.Size = new System.Drawing.Size(126, 38);
             this.rbEntrada.TabIndex = 0;
             this.rbEntrada.TabStop = true;
             this.rbEntrada.Text = "Entrada";
-            this.rbEntrada.UseVisualStyleBackColor = true;
+            this.rbEntrada.UseVisualStyleBackColor = false;
             this.rbEntrada.CheckedChanged += new System.EventHandler(this.rbEntrada_CheckedChanged);
             // 
             // gbDatosMovimiento
             // 
+            this.gbDatosMovimiento.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.gbDatosMovimiento.BackColor = System.Drawing.Color.Transparent;
             this.gbDatosMovimiento.Controls.Add(this.btnLimpiarMov);
             this.gbDatosMovimiento.Controls.Add(this.btnRegistrar);
             this.gbDatosMovimiento.Controls.Add(this.lblStockActual);
@@ -94,9 +104,10 @@
             this.gbDatosMovimiento.Controls.Add(this.lblCantidad);
             this.gbDatosMovimiento.Controls.Add(this.cmbProducto);
             this.gbDatosMovimiento.Controls.Add(this.lblProducto);
-            this.gbDatosMovimiento.Location = new System.Drawing.Point(350, 12);
+            this.gbDatosMovimiento.Font = new System.Drawing.Font("Monotype Corsiva", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbDatosMovimiento.Location = new System.Drawing.Point(328, 23);
             this.gbDatosMovimiento.Name = "gbDatosMovimiento";
-            this.gbDatosMovimiento.Size = new System.Drawing.Size(316, 199);
+            this.gbDatosMovimiento.Size = new System.Drawing.Size(549, 269);
             this.gbDatosMovimiento.TabIndex = 1;
             this.gbDatosMovimiento.TabStop = false;
             this.gbDatosMovimiento.Text = "Datos del Movimiento";
@@ -104,37 +115,44 @@
             // 
             // btnLimpiarMov
             // 
-            this.btnLimpiarMov.Location = new System.Drawing.Point(90, 165);
+            this.btnLimpiarMov.BackColor = System.Drawing.Color.LemonChiffon;
+            this.btnLimpiarMov.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLimpiarMov.Location = new System.Drawing.Point(215, 230);
             this.btnLimpiarMov.Name = "btnLimpiarMov";
-            this.btnLimpiarMov.Size = new System.Drawing.Size(108, 26);
+            this.btnLimpiarMov.Size = new System.Drawing.Size(111, 33);
             this.btnLimpiarMov.TabIndex = 6;
             this.btnLimpiarMov.Text = "Limpiar";
-            this.btnLimpiarMov.UseVisualStyleBackColor = true;
+            this.btnLimpiarMov.UseVisualStyleBackColor = false;
             this.btnLimpiarMov.Click += new System.EventHandler(this.btnLimpiarMov_Click);
             // 
             // btnRegistrar
             // 
-            this.btnRegistrar.Location = new System.Drawing.Point(72, 130);
+            this.btnRegistrar.BackColor = System.Drawing.Color.LemonChiffon;
+            this.btnRegistrar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRegistrar.Location = new System.Drawing.Point(192, 189);
             this.btnRegistrar.Name = "btnRegistrar";
-            this.btnRegistrar.Size = new System.Drawing.Size(157, 29);
+            this.btnRegistrar.Size = new System.Drawing.Size(157, 35);
             this.btnRegistrar.TabIndex = 5;
             this.btnRegistrar.Text = "Registrar Movimiento";
-            this.btnRegistrar.UseVisualStyleBackColor = true;
+            this.btnRegistrar.UseVisualStyleBackColor = false;
             this.btnRegistrar.Click += new System.EventHandler(this.btnRegistrar_Click);
             // 
             // lblStockActual
             // 
             this.lblStockActual.AutoSize = true;
-            this.lblStockActual.Location = new System.Drawing.Point(6, 98);
+            this.lblStockActual.BackColor = System.Drawing.Color.LemonChiffon;
+            this.lblStockActual.Location = new System.Drawing.Point(6, 150);
             this.lblStockActual.Name = "lblStockActual";
-            this.lblStockActual.Size = new System.Drawing.Size(92, 16);
+            this.lblStockActual.Size = new System.Drawing.Size(132, 24);
             this.lblStockActual.TabIndex = 4;
             this.lblStockActual.Text = "Stock Actual:--";
             this.lblStockActual.Click += new System.EventHandler(this.lblStockActual_Click);
             // 
             // nudCantidad
             // 
-            this.nudCantidad.Location = new System.Drawing.Point(109, 60);
+            this.nudCantidad.BackColor = System.Drawing.Color.LemonChiffon;
+            this.nudCantidad.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.nudCantidad.Location = new System.Drawing.Point(215, 73);
             this.nudCantidad.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -146,7 +164,7 @@
             0,
             0});
             this.nudCantidad.Name = "nudCantidad";
-            this.nudCantidad.Size = new System.Drawing.Size(120, 22);
+            this.nudCantidad.Size = new System.Drawing.Size(230, 30);
             this.nudCantidad.TabIndex = 3;
             this.nudCantidad.Value = new decimal(new int[] {
             1,
@@ -158,36 +176,43 @@
             // lblCantidad
             // 
             this.lblCantidad.AutoSize = true;
-            this.lblCantidad.Location = new System.Drawing.Point(6, 66);
+            this.lblCantidad.BackColor = System.Drawing.Color.LemonChiffon;
+            this.lblCantidad.Location = new System.Drawing.Point(50, 72);
             this.lblCantidad.Name = "lblCantidad";
-            this.lblCantidad.Size = new System.Drawing.Size(64, 16);
+            this.lblCantidad.Size = new System.Drawing.Size(88, 24);
             this.lblCantidad.TabIndex = 2;
             this.lblCantidad.Text = "Cantidad:";
             // 
             // cmbProducto
             // 
+            this.cmbProducto.BackColor = System.Drawing.Color.LemonChiffon;
+            this.cmbProducto.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cmbProducto.FormattingEnabled = true;
-            this.cmbProducto.Location = new System.Drawing.Point(108, 30);
+            this.cmbProducto.Location = new System.Drawing.Point(215, 26);
             this.cmbProducto.Name = "cmbProducto";
-            this.cmbProducto.Size = new System.Drawing.Size(121, 24);
+            this.cmbProducto.Size = new System.Drawing.Size(328, 32);
             this.cmbProducto.TabIndex = 1;
             this.cmbProducto.SelectedIndexChanged += new System.EventHandler(this.cmbProducto_SelectedIndexChanged);
             // 
             // lblProducto
             // 
             this.lblProducto.AutoSize = true;
-            this.lblProducto.Location = new System.Drawing.Point(6, 33);
+            this.lblProducto.BackColor = System.Drawing.Color.LemonChiffon;
+            this.lblProducto.Location = new System.Drawing.Point(50, 33);
             this.lblProducto.Name = "lblProducto";
-            this.lblProducto.Size = new System.Drawing.Size(64, 16);
+            this.lblProducto.Size = new System.Drawing.Size(88, 24);
             this.lblProducto.TabIndex = 0;
             this.lblProducto.Text = "Producto:";
             // 
             // gbHistorial
             // 
+            this.gbHistorial.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbHistorial.BackColor = System.Drawing.Color.Transparent;
             this.gbHistorial.Controls.Add(this.dgvMovimientos);
-            this.gbHistorial.Location = new System.Drawing.Point(12, 217);
+            this.gbHistorial.Location = new System.Drawing.Point(131, 298);
             this.gbHistorial.Name = "gbHistorial";
-            this.gbHistorial.Size = new System.Drawing.Size(776, 231);
+            this.gbHistorial.Size = new System.Drawing.Size(857, 375);
             this.gbHistorial.TabIndex = 2;
             this.gbHistorial.TabStop = false;
             this.gbHistorial.Text = "Historial de Movimientos";
@@ -195,36 +220,49 @@
             // 
             // dgvMovimientos
             // 
+            this.dgvMovimientos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvMovimientos.BackgroundColor = System.Drawing.Color.LemonChiffon;
             this.dgvMovimientos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMovimientos.Location = new System.Drawing.Point(6, 21);
+            this.dgvMovimientos.Location = new System.Drawing.Point(14, 21);
             this.dgvMovimientos.Name = "dgvMovimientos";
             this.dgvMovimientos.RowHeadersWidth = 51;
             this.dgvMovimientos.RowTemplate.Height = 24;
-            this.dgvMovimientos.Size = new System.Drawing.Size(764, 210);
+            this.dgvMovimientos.Size = new System.Drawing.Size(829, 337);
             this.dgvMovimientos.TabIndex = 0;
             this.dgvMovimientos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvMovimientos_CellContentClick);
             // 
             // btnVolver
             // 
-            this.btnVolver.Location = new System.Drawing.Point(687, 12);
+            this.btnVolver.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnVolver.BackColor = System.Drawing.Color.LemonChiffon;
+            this.btnVolver.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnVolver.Image = global::Almacen_El_Dorado.Properties.Resources.VolverN1;
+            this.btnVolver.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnVolver.Location = new System.Drawing.Point(939, 31);
             this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(63, 26);
+            this.btnVolver.Size = new System.Drawing.Size(95, 35);
             this.btnVolver.TabIndex = 7;
             this.btnVolver.Text = "Volver";
-            this.btnVolver.UseVisualStyleBackColor = true;
+            this.btnVolver.UseVisualStyleBackColor = false;
             this.btnVolver.Click += new System.EventHandler(this.btnVolver_Click);
             // 
             // FrmMovimientos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.BackgroundImage = global::Almacen_El_Dorado.Properties.Resources.fondodesert1;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(1076, 702);
             this.Controls.Add(this.btnVolver);
             this.Controls.Add(this.gbHistorial);
             this.Controls.Add(this.gbDatosMovimiento);
             this.Controls.Add(this.gbTipoMovimiento);
+            this.DoubleBuffered = true;
             this.Name = "FrmMovimientos";
             this.Text = "FrmMovimientos";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmMovimientos_Load);
             this.gbTipoMovimiento.ResumeLayout(false);
             this.gbTipoMovimiento.PerformLayout();

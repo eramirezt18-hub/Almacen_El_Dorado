@@ -10,8 +10,8 @@ namespace Almacen_El_Dorado
         public FrmConsultas()
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new System.Drawing.Size(1100, 700);
+            
+            this.WindowState = FormWindowState.Maximized;
             ConfigurarDataGridView();
             CargarProductos();
             rbNombre.Checked = true;
@@ -54,7 +54,7 @@ namespace Almacen_El_Dorado
                         query = @"SELECT p.Codigo, p.Nombre, c.Nombre as Categoria, p.Stock, p.Precio 
                                  FROM Productos p 
                                  INNER JOIN Categorias c ON p.IdCategoria = c.IdCategoria 
-                                 ORDER BY p.Nombre";
+                                 ORDER BY p.Codigo";
                     }
                     else
                     {

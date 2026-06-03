@@ -10,8 +10,10 @@ namespace Almacen_El_Dorado
         public FrmMovimientos()
         {
             InitializeComponent();
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new System.Drawing.Size(1000, 650);
+            
+
+            this.WindowState = FormWindowState.Maximized;
+
             ConfigurarDataGridView();
             CargarComboProductos();
             CargarMovimientos();
