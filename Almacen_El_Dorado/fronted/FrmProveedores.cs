@@ -301,7 +301,7 @@ namespace Almacen_El_Dorado
             principal.Show();
         }
 
-        // eventos vacios
+        
         private void lblTelefono_Click(object sender, EventArgs e) { }
         private void txtBuscar_TextChanged(object sender, EventArgs e) { }
         private void dgvProveedores_CellContentClick(object sender, DataGridViewCellEventArgs e) { }

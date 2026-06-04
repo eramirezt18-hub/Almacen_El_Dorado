@@ -144,7 +144,6 @@ namespace Almacen_El_Dorado
                 "Acerca de", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // ========== EVENTOS VACIOS ==========
         private void archivoToolStripMenuItem_Click(object sender, EventArgs e) { }
         private void mantenimientoToolStripMenuItem_Click(object sender, EventArgs e) { }
         private void inventarioToolStripMenuItem_Click(object sender, EventArgs e) { }

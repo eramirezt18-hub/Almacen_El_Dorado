@@ -413,7 +413,7 @@ namespace Almacen_El_Dorado
             principal.Show();
         }
 
-        // eventos vacios
+     
         private void cmbCategoria_SelectedIndexChanged(object sender, EventArgs e) { }
         private void txtCodigo_TextChanged(object sender, EventArgs e) { }
         private void txtNombre_TextChanged(object sender, EventArgs e) { }

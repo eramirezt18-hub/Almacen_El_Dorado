@@ -48,7 +48,7 @@ CREATE TABLE Movimientos (
 );
 GO
 
--- Insertar datos de ejemplo
+-- Insertar datos
 INSERT INTO Categorias (Nombre) VALUES ('Electronica'), ('Ropa'), ('Hogar'), ('Alimentos');
 GO
 
