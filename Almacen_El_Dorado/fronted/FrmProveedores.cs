@@ -312,5 +312,10 @@ namespace Almacen_El_Dorado
         private void txtEmail_TextChanged(object sender, EventArgs e) { }
         private void gbDatosProveedor_Enter(object sender, EventArgs e) { }
         private void FrmProveedores_Load(object sender, EventArgs e) { }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }
